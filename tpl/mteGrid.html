@@ -1,0 +1,68 @@
+<?php if($ACTIONS[mteCrud::ACTION_NEW] == true) { ?>
+	<a class="crud_<?php echo(mteCrud::ACTION_NEW)?>">New Record</a><br/>
+<? } ?>
+<?php if($ACTIONS[mteCrud::ACTION_EXPORT] == true) { ?>
+	<a class="crud_<?php echo(mteCrud::ACTION_EXPORT)?>">Exportar</a><br/>
+<? } ?>
+<?php if($EXP_LOGICAL != '') { ?>
+<a class="crud_state?>"><?php echo($SHOW_HIDDEN == 1?'Hide inactive record':'View inactive record')?></a><br/>
+<? } ?>
+
+<?php echo('Order field:'.$SORT_FIELD.' / Order Direction:'.$SORT_DIRECTION); ?><br/>
+
+<table id="<?php echo($CRUD_ID)?>">
+	<?php if (count($LABELS) > 0) {?>
+	<thead>
+		<tr>
+			<?php foreach ($COLUMNS as $fieldName) {?>
+				<th><?php echo(isset($LABELS[$fieldName])?$LABELS[$fieldName]:'&nbsp;'); ?></th>
+			<?php } ?>
+			<?php if($ACTIONS[mteCrud::ACTION_EDIT] == true || 
+					 $ACTIONS[mteCrud::ACTION_DEL]  == true || 
+					 $ACTIONS[mteCrud::ACTION_VIEW] == true) {?>			
+					 <th>&nbsp;</th>
+			<?php } ?>			
+		</tr>
+	</thead>
+	<?php } ?>
+	
+	<tbody>
+	<?php if (count($RECORDS) > 0) {?>
+		<?php foreach ($RECORDS as $nroRow => $record) {?>
+		<tr data-active="<?php echo($record['statusRow'])?>">
+			<?php foreach ($COLUMNS as $fieldName) {
+				 $aux = isset($LABELS[$fieldName])?explode('|',$LABELS[$fieldName]):array(); ?>
+			<td <?php echo(isset($aux[1])?'class="'.$aux[1].'"':''); ?>>
+				<?php echo(isset($record[$fieldName])?$record[$fieldName]:'&nbsp;'); ?>
+			</td>
+			<?php } ?>	
+			<?php if($ACTIONS[mteCrud::ACTION_EDIT] == true || 
+					 $ACTIONS[mteCrud::ACTION_DEL]  == true || 
+					 $ACTIONS[mteCrud::ACTION_VIEW] == true) {?>
+			<td>
+				<?php if($ACTIONS[mteCrud::ACTION_EDIT] == true) { ?>
+					<a data-idRow='<?php echo($record['idRow'])?>' class="crud_<?php echo(mteCrud::ACTION_EDIT)?>">Edit</a><br/>
+				<? } ?>
+				<?php if($ACTIONS[mteCrud::ACTION_DEL] == true)  {?>
+					<a data-idRow='<?php echo($record['idRow'])?>' class="crud_<?php echo(mteCrud::ACTION_DEL)?>">Del</a><br/>
+				<? } ?>
+				<?php if($ACTIONS[mteCrud::ACTION_VIEW] == true) {?>
+					<a data-idRow='<?php echo($record['idRow'])?>' class="crud_<?php echo(mteCrud::ACTION_VIEW)?>">View</a><br/>
+				<? } ?>				
+			</td>
+			<?php } ?>
+		</tr>
+		<?php } ?>
+	<?php } else {?>
+		<td colspan="<?php echo(count($COLUMNS));?>"><?php echo(__('No data'));?></td>
+	<?php } ?>
+	</tbody>
+</table>
+
+<?php if ($PAGE_TOTAL > 1) { ?>
+	<?php echo('Page '.$PAGE_CURRENT.' of '.$PAGE_TOTAL.' Rows x page: '.$ROWS_COUNT); ?><br/>
+	<a data-currentPage='<?php echo($PAGE_CURRENT)?>' data-totalPage='<?php echo($PAGE_TOTAL)?>' class="crud_pagination_first">First</a><br/>
+	<a data-currentPage='<?php echo($PAGE_CURRENT)?>' data-totalPage='<?php echo($PAGE_TOTAL)?>'class="crud_pagination_prev">Previous</a><br/>
+	<a data-currentPage='<?php echo($PAGE_CURRENT)?>' data-totalPage='<?php echo($PAGE_TOTAL)?>'class="crud_pagination_next">Next</a><br/>
+	<a data-currentPage='<?php echo($PAGE_CURRENT)?>' data-totalPage='<?php echo($PAGE_TOTAL)?>'class="crud_pagination_last">Last</a><br/>
+<?php } ?>
