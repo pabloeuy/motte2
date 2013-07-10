@@ -32,19 +32,21 @@ if (!defined('MTE_ACTIVE_TRANSLATE')) {
 
 // Template engine
 if (MTE_ENGINE_TEMPLATE == 'mteSimpleTemplate') {
-	include_once(DIR_CORE.'/motte/mteSimpleTemplate.class.php');
+	include_once(DIR_MOTTE.'/mteSimpleTemplate.class.php');
 }
 elseif (MTE_ENGINE_TEMPLATE == 'smarty') {
-	include_once(DIR_CORE.'/motte/mteTemplate.class.php');
+	include_once(DIR_MOTTE.'/mteTemplate.class.php');
 }
 
 // include
-include_once(DIR_CORE.'/motte/mteAjaxResponse.class.php');
-include_once(DIR_CORE.'/motte/mteTools.class.php');
-include_once(DIR_CORE.'/motte/mteHtmlResponse.class.php');
-include_once(DIR_CORE.'/motte/lib/gettext/gettext.php');
-include_once(DIR_CORE.'/motte/lib/gettext/stringReader.php');
-include_once(DIR_CORE.'/motte/mtei18n.class.php');
+include_once(DIR_MOTTE.'/mteAjaxResponse.class.php');
+include_once(DIR_MOTTE.'/mteTools.class.php');
+include_once(DIR_MOTTE.'/mteHtmlResponse.class.php');
+include_once(DIR_MOTTE.'/lib/gettext/gettext.php');
+include_once(DIR_MOTTE.'/lib/gettext/stringReader.php');
+include_once(DIR_MOTTE.'/mtei18n.class.php');
+include_once(DIR_MOTTE.'/lib/class.inputfilter.php');
+
 
 // alias
 function __($text = '') {

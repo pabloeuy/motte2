@@ -15,13 +15,13 @@
 // driver
 switch (DB_DRIVER) {
 	case 'mySql':
-		include_once(DIR_CORE.'/motte/mteCnx.class.php');
-		include_once(DIR_CORE.'/motte/mteCnxMySql.class.php');
-		include_once(DIR_CORE.'/motte/mteRecordSet.class.php');
-		include_once(DIR_CORE.'/motte/mteDataSql.class.php');
-		include_once(DIR_CORE.'/motte/mteTableSql.class.php');
-		include_once(DIR_CORE.'/motte/mteOrderSql.class.php');
-		include_once(DIR_CORE.'/motte/mteWhereSql.class.php');
+		include_once(DIR_MOTTE.'/mteCnx.class.php');
+		include_once(DIR_MOTTE.'/mteCnxMySql.class.php');
+		include_once(DIR_MOTTE.'/mteRecordSet.class.php');
+		include_once(DIR_MOTTE.'/mteDataSql.class.php');
+		include_once(DIR_MOTTE.'/mteTableSql.class.php');
+		include_once(DIR_MOTTE.'/mteOrderSql.class.php');
+		include_once(DIR_MOTTE.'/mteWhereSql.class.php');
 		break;
 }
 

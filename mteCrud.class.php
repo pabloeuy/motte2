@@ -68,9 +68,9 @@ class mteCrud {
 		$this->_labels           = array();
 		$this->_fields           = array();
 		$this->_fieldsGrid       = array(); 
-		$this->_htmlGrid         = DIR_CORE.'/motte/tpl/mteGrid.html';
-		$this->_htmlError        = DIR_CORE.'/motte/tpl/mteError.html';
-		$this->_htmlNotification = DIR_CORE.'/motte/tpl/mteNotification.html';
+		$this->_htmlGrid         = DIR_MOTTE.'/tpl/mteGrid.html';
+		$this->_htmlError        = DIR_MOTTE.'/tpl/mteError.html';
+		$this->_htmlNotification = DIR_MOTTE.'/tpl/mteNotification.html';
 		$this->_cantRows         = ROWS_GRID;
 		$this->_htmlForm         = '';
 		$this->_readonly         = false;

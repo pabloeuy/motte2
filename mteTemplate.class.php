@@ -15,7 +15,7 @@
  */
 
 // Smarty
-include_once(DIR_CORE.'/motte/smarty3/libs/Smarty.class.php');
+include_once(DIR_MOTTE.'/lib/smarty3/libs/Smarty.class.php');
 
 class mteTemplate {
 
