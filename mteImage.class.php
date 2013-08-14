@@ -41,15 +41,31 @@ class mteImage {
 		return (is_readable($file) && is_file($file))?$file:'';
 	}
 
-	public static function getImageModo($prefix, $id, $modo) {
+	public static function getImageModo($prefix, $id, $modo, $crop = true) {
 		$file = mteImage::getTargetFile($prefix, $id, $modo);
 		if (!is_readable($file) || !is_file($file)) {
 			$imageBase = mteImage::getImageBase($prefix, $id);
 			if ($imageBase != '') {
 				// resize image
 				mteImage::prepareImageDir($prefix, $id, $modo);
-				$modo = explode('x', strtolower($modo));
-				mteImage::imageResizeToMax($imageBase, $file, $modo[0], $modo[1]);
+				$modo   = explode('x', strtolower($modo));
+				$width  = $modo[0];
+				$height = $modo[1];
+				mteImage::imageResizeToMax($imageBase, $file, $width, $height);
+
+				if (is_readable($file) && is_file($file)) {
+					// crop
+					$image = new SimpleImage();
+    				$image->load($file);					
+					if ($crop && ($image->getWidth() != $width || $image->getHeight() != $height)) {
+						$imagick = new Imagick($file);
+						$imagick->cropThumbnailImage($width, $height);
+						$imagick->enhanceImage();
+						$imagick->setImageCompression(Imagick::COMPRESSION_JPEG);
+						$imagick->setImageCompressionQuality(90);
+						$imagick->writeImage($file);
+					}
+            	}
 			}
 		}
 		return (is_readable($file) && is_file($file))?$file:'';
