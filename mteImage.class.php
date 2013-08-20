@@ -51,7 +51,7 @@ class mteImage {
 				$modo   = explode('x', strtolower($modo));
 				$width  = $modo[0];
 				$height = $modo[1];
-				mteImage::imageResizeToMax($imageBase, $file, $width, $height);
+				mteImage::resizeToHeight($imageBase, $file, $height);
 
 				if (is_readable($file) && is_file($file)) {
 					// crop
@@ -99,6 +99,14 @@ class mteImage {
     	$image->resizeToMax($w, $h);
     	$image->save($target, IMAGETYPE_JPEG, IMAGE_COMPRESSION, 0666);
 	}
+
+	public static function resizeToHeight($scr, $target, $h) {
+		$image = new SimpleImage();
+    	$image->load($scr);
+    	$image->resizeToHeight($h);
+    	$image->save($target, IMAGETYPE_JPEG, IMAGE_COMPRESSION, 0666);
+	}
+	
 
 	public static function uploadImage($prefix, $id, $file = 'Filedata') {
         $result = __("General error");
