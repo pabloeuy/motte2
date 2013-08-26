@@ -54,7 +54,7 @@ function isDate(dateStr) {
 	var error = '';
 
 	if (matchArray == null) {
-		error = "Please enter date as either mm/dd/yyyy or mm-dd-yyyy.");
+		error = "Please enter date as either mm/dd/yyyy or mm-dd-yyyy.";
 		return false;
 	}
 
