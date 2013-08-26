@@ -40,3 +40,12 @@ function mteNotSelect(frm) {
 }
 
 
+function isDate(date){
+	var  ExpRegDate = /^(3[01]|0?[1-9]|[12]d)/(0?[1-9]|1[012])/d{4}/;
+
+    var res=true;
+    if (!ExpRegDate.test(date) ){
+    	res=false;
+	}
+    return res;
+}
