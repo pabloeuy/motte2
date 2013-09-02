@@ -33,7 +33,5 @@ class mteView {
 	public static function getTextInput(){
 		
 	}
-
-
 }
 ?>

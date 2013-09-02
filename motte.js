@@ -14,7 +14,6 @@
 // No empty
 function mteNotNull(frm) {
 	var error = new Array();
-		
 	$.each($(frm+' .mteNoEmpty'), function() {		
 		var id = $(this).attr('id');
 		if ($('#'+id).val() == '' ) {
@@ -28,7 +27,6 @@ function mteNotNull(frm) {
 // No Select
 function mteNotSelect(frm) {
 	var errorSelect = new Array();
-
 	$.each($(frm+' .mteNoSelect'), function() {
 		var id = $(this).attr('id');
 		if ($('#'+id).val() == 0 ) {
