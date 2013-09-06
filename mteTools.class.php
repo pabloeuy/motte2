@@ -247,3 +247,4 @@ class tools {
 		return $days[$d];
 	}
 }
+?>

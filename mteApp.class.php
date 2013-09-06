@@ -306,6 +306,5 @@ class mteApp {
 		}
 		return $this->_obj['mdl'.strtolower($model)];
 	}
-
 }
 ?>

@@ -209,9 +209,6 @@ class mteAjaxResponse {
 	 * @return string
 	 */
 	public function getXml() {
-		print $this->parseXml();
-		exit();
-
 		return $this->parseXml();
 	}
 

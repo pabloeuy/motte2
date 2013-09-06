@@ -470,7 +470,5 @@ class mteRecordSet implements Iterator {
 		$this->gotoIndex($indexActive); //restore initial position
 		return $result;
 	}
-
-
 }
 ?>
