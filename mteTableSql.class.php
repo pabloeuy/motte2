@@ -363,14 +363,14 @@ class mteTableSql extends mteDataSql {
 		return $record;
 	}
 
-		/**
-		 *
-		 * Returns data based on WHERE and ORDER clauses
-		 *
-		 * @access public
-		 * @param string $fieldsToShow
-		 * @return string
-		 */
+	/**
+	 *
+	 * Returns data based on WHERE and ORDER clauses
+	 *
+	 * @access public
+	 * @param string $fieldsToShow
+	 * @return string
+	 */
 	private function _getSql($fieldsToShow = '*', $where = '', $order = '', $distinct = false, $foreignFields = TRUE) {
 		return $this->getSql($fieldsToShow, $where, $order, $distinct, $foreignFields);
 	}
