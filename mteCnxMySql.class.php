@@ -122,6 +122,7 @@ class mteCnxMySql extends mteCnx {
 		$result = false;
 		// Si hay error
 		if ($query === false){
+			$this->setEventMsg(mysql_error());
 			$result = false;
 		}
 		else{
