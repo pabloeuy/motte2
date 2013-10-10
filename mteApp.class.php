@@ -46,7 +46,8 @@ include_once(DIR_MOTTE.'/lib/gettext/gettext.php');
 include_once(DIR_MOTTE.'/lib/gettext/stringReader.php');
 include_once(DIR_MOTTE.'/mtei18n.class.php');
 include_once(DIR_MOTTE.'/lib/class.inputfilter.php');
-
+include_once(DIR_MOTTE.'/lib/class.inputfilter.php');
+include_once(DIR_MOTTE.'/lib/slim/Slim/Slim.php');
 
 // alias
 function __($text = '') {
@@ -67,8 +68,7 @@ class mteApp {
 	private $_method;
 	private $_htmlResponse;
 	private $_response;
-
-
+	private $_restManager;
 
 	/**
 	 * Constructor
@@ -195,6 +195,29 @@ class mteApp {
 			}
 		}
 		return $this->_obj['ctr'.strtolower($module)];
+	}
+
+	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	//          R E S T   M A N A G E R
+	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	private function _getRESTManager($params == '') {
+		if (!isset($this->_restManager)) {
+			if (is_array($params)) {
+				$this->_restManager = new Slim($params);
+			}
+			else {
+				$this->_restManager = new Slim();	
+			}
+		}
+		return $this->_restManager;
+	}
+
+	public function getRM($params = '') {
+		return $this->_getRESTManager($params)
+	}
+
+	public function getRESTManager($params = '') {
+		return $this->_getRESTManager($params)
 	}
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
