@@ -200,7 +200,7 @@ class mteApp {
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//          R E S T   M A N A G E R
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	private function _getRESTManager($params == '') {
+	private function _getRESTManager($params = '') {
 		if (!isset($this->_restManager)) {
 			if (is_array($params)) {
 				$this->_restManager = new Slim($params);
