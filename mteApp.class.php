@@ -213,11 +213,11 @@ class mteApp {
 	}
 
 	public function getRM($params = '') {
-		return $this->_getRESTManager($params)
+		return $this->_getRESTManager($params);
 	}
 
 	public function getRESTManager($params = '') {
-		return $this->_getRESTManager($params)
+		return $this->_getRESTManager($params);
 	}
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
