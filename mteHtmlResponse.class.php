@@ -9,7 +9,7 @@
  * @version 2.44
  * @author 	Pedro Gauna (pgauna@gmail.com)
  * 			Braulio Rios (braulioriosf@gmail.com)
- * 			Pablo Erartes (pabloeuy@gmail.com) 
+ * 			Pablo Erartes (pabloeuy@gmail.com)
  */
 
 class mteHtmlResponse {
@@ -32,7 +32,7 @@ class mteHtmlResponse {
 	 * Destructor
 	 */
 	public function __destruct() {
-		
+
 	}
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
