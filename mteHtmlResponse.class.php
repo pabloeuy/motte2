@@ -9,7 +9,7 @@
  * @version 2.44
  * @author 	Pedro Gauna (pgauna@gmail.com)
  * 			Braulio Rios (braulioriosf@gmail.com)
- * 			Pablo Erartes (pabloeuy@gmail.com) 
+ * 			Pablo Erartes (pabloeuy@gmail.com)
  */
 
 class mteHtmlResponse {
@@ -32,7 +32,7 @@ class mteHtmlResponse {
 	 * Destructor
 	 */
 	public function __destruct() {
-		
+
 	}
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -116,7 +116,7 @@ class mteHtmlResponse {
 		// js and css files added automatically (by name)
 		$pathParts = pathinfo($tplDir.'/'.$tplFile);
 		$this->addJs((defined('DIR_JS')?DIR_JS:$tplDir.'/js').'/'.$pathParts['filename'].'.js');
-		$this->addCss((defined('DIR_CSS')?DIR_JS:$tplDir.'/css').'/'.$pathParts['filename'].'.css');
+		$this->addCss((defined('DIR_CSS')?DIR_CSS:$tplDir.'/css').'/'.$pathParts['filename'].'.css');
 
 		$result = '';
 		if (MTE_ENGINE_TEMPLATE == 'mteSimpleTemplate') {
