@@ -122,6 +122,16 @@ class tools {
 		return isset($_POST[$name]) ? $_POST[$name] : '';
 	}
 
+	public static function checkRemoteFile($url) {
+    	$ch = curl_init();
+    	curl_setopt($ch, CURLOPT_URL,$url);
+	    // don't download content
+    	curl_setopt($ch, CURLOPT_NOBODY, 1);
+	    curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	return (curl_exec($ch)!== FALSE);
+    }
+
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//                   S E S S I O N
