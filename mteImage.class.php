@@ -30,10 +30,17 @@ class mteImage {
     	$image->resizeToHeight($h);
     	$image->save($target, IMAGETYPE_JPEG, IMAGE_COMPRESSION, 0666);
 	}
-	
+
+	public static function resize($scr, $target, $w, $h) {
+		$image = new SimpleImage();
+    	$image->load($scr);
+    	$image->resize($w, $h);
+    	$image->save($target, IMAGETYPE_JPEG, IMAGE_COMPRESSION, 0666);
+	}
+
 	public static function cropImage($file, $width, $height) {
 		$image = new SimpleImage();
-		$image->load($file);					
+		$image->load($file);
 		if ($image->getWidth() != $width || $image->getHeight() != $height) {
 			$imagick = new Imagick($file);
 			$imagick->cropThumbnailImage($width, $height);
