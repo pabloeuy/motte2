@@ -59,7 +59,14 @@ class tools {
 	}
 
 	static function getAge($birth, $now = ''){
-		$result = 0;
+            date_default_timezone_set("UTC");
+            $dob = date("Y-m-d",strtotime($birth));
+            $dobObject = new DateTime($dob);
+            $nowObject = new DateTime();
+            $diff = $dobObject->diff($nowObject);
+            return $diff->y;
+            
+		/*$result = 0;
 		list($year, $month, $day) = explode("-", $birth);
 		if (checkdate($month, $day, $year)){
 			$now       = explode('-', ($now == ''?date('Y-m-d'):$now));
@@ -70,7 +77,7 @@ class tools {
 				$result--;
 			}
 		}
-		return $result;
+		return $result;*/
 	}
 
 	public static function sanitizeFileName($dangerous_filename) {
