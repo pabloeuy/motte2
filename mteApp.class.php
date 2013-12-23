@@ -48,7 +48,7 @@ include_once(DIR_MOTTE.'/mtei18n.class.php');
 include_once(DIR_MOTTE.'/lib/class.inputfilter.php');
 include_once(DIR_MOTTE.'/lib/class.inputfilter.php');
 include_once(DIR_MOTTE.'/lib/slim/Slim/Slim.php');
-
+\Slim\Slim::registerAutoloader();
 // alias
 function __($text = '') {
 	return MTE_ACTIVE_TRANSLATE == '1'?mteApp::get()->_($text):$text;
@@ -202,11 +202,12 @@ class mteApp {
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	private function _getRESTManager($params = '') {
 		if (!isset($this->_restManager)) {
+
 			if (is_array($params)) {
-				$this->_restManager = new Slim($params);
+				$this->_restManager = new \Slim\Slim($params);
 			}
 			else {
-				$this->_restManager = new Slim();	
+				$this->_restManager = new \Slim\Slim();
 			}
 		}
 		return $this->_restManager;
