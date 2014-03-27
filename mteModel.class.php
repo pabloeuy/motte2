@@ -114,7 +114,7 @@ class mteModel {
 		$this->getCnx()->executeSql('START TRANSACTION');
 	}
 
-	public function commit() {		
+	public function commit() {
 		$this->getCnx()->executeSql('COMMIT');
 	}
 

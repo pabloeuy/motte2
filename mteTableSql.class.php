@@ -940,7 +940,6 @@ class mteTableSql extends mteDataSql {
 	public function getRecordSet($columns = '*', $where = '', $order = '', $numRows = -1, $offset = -1, $calcFields = true, $distinct = false, $foreignFields = TRUE) {
 		// result
 		$recordSetResult = parent::getRecordSet($this->getSql($columns, $where, $order, $distinct, $foreignFields), $numRows, $offset);
-
 		// Genero campos calculados
 		if ($calcFields && (method_exists($this, 'onCalcFields'))) {
 			$recordSetCalc = new mteRecordSet();
@@ -1151,5 +1150,26 @@ class mteTableSql extends mteDataSql {
 		// Returns
 		return $literal;
 	}
+
+	/**
+     * Actualiza de una tabla un array de valores al primer registro que matchea el where
+     *
+     * @access public
+     * @param  array  $values valores a actualizar
+     * @param  string $where filtro para actualizar la tabla
+     * @return string
+     */
+    public function updateValues($values, $where = '') {
+        $error = '';
+        $record=$this->getRecord($where);
+        if(empty($record)){
+            return __('UPDATE - Where is not matching').' ('.$this->getTableName().')';
+        }
+        foreach ($values as $fieldName => $value) {
+            $record[$fieldName]=$value;
+        }
+        return $this->updateRecord($record,$where);
+    }
+
 }
 ?>
