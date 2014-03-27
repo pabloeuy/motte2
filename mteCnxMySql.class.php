@@ -117,7 +117,7 @@ class mteCnxMySql extends mteCnx {
 	  * @param 	string 	$sql
 	  * @return array o boolean
 	  */
-	public function executeSql($sql = ''){		
+	public function executeSql($sql = ''){	
 		$query = @mysql_query($sql, $this->getIdDatabase());
 		$result = false;
 		// Si hay error
