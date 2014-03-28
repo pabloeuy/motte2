@@ -39,12 +39,12 @@ class mteRestManager {
 	 * Destructor
 	 */
 	public function __destruct() {
-	}	
+	}
 
 	public function route($httpMet, $path){
 		// Parse path
 		$httpMet = strtoupper($httpMet);
-		
+
 		// Route
 		$route = new mteRoute();
 		if ($route->validPath($path)) {
@@ -71,7 +71,7 @@ class mteRestManager {
 			else {
 				$this->responseError(__('Unknown method (mteCtr-'.$method.')'));
 			}
-		} 
+		}
 		else {
 			$this->responseError(__('Unknown module (mteCtr-'.$module.')'));
 		}
@@ -107,7 +107,7 @@ class mteRestManager {
 
 			// Valid Controller
 			if (isset($this->_routes[$httpMet][$routeUri->getController()])) {
-				// Valid Method	
+				// Valid Method
 				if (isset($this->_routes[$httpMet][$routeUri->getController()][$routeUri->getMethod()])) {
 					$routeApp = $this->_routes[$httpMet][$routeUri->getController()][$routeUri->getMethod()];
 
@@ -120,7 +120,7 @@ class mteRestManager {
 						$this->_execute($routeUri->getController(), $routeUri->getMethod());
 					}
 					else {
-						$this->responseError(__('Params not match'));	
+						$this->responseError(__('Params not match'));
 					}
 				}
 				else {
@@ -155,6 +155,10 @@ class mteRestManager {
 
 	public function responseSuccess($data = ''){
 		$this->_response(MTE_HTTP_RESPONSE_SUCCESS, $data);
+	}
+
+	public function getHttpMethod(){
+		return $_SERVER['REQUEST_METHOD'];
 	}
 }
 ?>

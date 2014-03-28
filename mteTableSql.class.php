@@ -1151,5 +1151,25 @@ class mteTableSql extends mteDataSql {
 		// Returns
 		return $literal;
 	}
+
+   /**
+	* Actualiza de una tabla un array de valores al primer registro que matchea el where
+	*
+	* @access public
+	* @param array $values valores a actualizar
+	* @param string $where filtro para actualizar la tabla
+	* @return string
+	*/
+    public function updateValues($values, $where = '') {
+        $error = '';
+        $record=$this->getRecord($where);
+        if(empty($record)){
+            return __('UPDATE - Where is not matching').' ('.$this->getTableName().')';
+        }
+        foreach ($values as $fieldName => $value) {
+            $record[$fieldName]=$value;
+        }
+        return $this->updateRecord($record,$where);
+    }
 }
 ?>
