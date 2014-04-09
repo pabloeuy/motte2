@@ -6,8 +6,8 @@
  * @package motte
  * @subpackage app
  * @license GPLv2 http://opensource.org/licenses/gpl-license.php GNU Public license
- * @version 2.44
- * @author 	Maicol Bentancor (maicol.bentancor@gmail.com) /
+ * @version 2.5
+ * @author 	Maicol Bentancor (maibenta@correo.ucu.edu.uy) /
  *			Pablo Ilundain (pabloilundain@gmail.com) /
  * 			Pedro Gauna (pgauna@gmail.com) /
  * 			Braulio Rios (braulioriosf@gmail.com) /
@@ -36,7 +36,7 @@ class mteRoute {
 	 * Destructor
 	 */
 	public function __destruct() {
-	}	
+	}
 
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -67,7 +67,7 @@ class mteRoute {
 			// parse
 			$crumbs = explode('/', $path);
 			if ($path[0] == '/') {
-				unset($crumbs[0]);				
+				unset($crumbs[0]);
 			}
 
 			// Controller & Method
