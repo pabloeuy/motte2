@@ -1170,6 +1170,5 @@ class mteTableSql extends mteDataSql {
         }
         return $this->updateRecord($record,$where);
     }
-
 }
 ?>

@@ -13,23 +13,27 @@
  */
 
 // driver
-switch (DB_DRIVER) {
-	case 'mySql':
-		include_once(DIR_MOTTE.'/mteCnx.class.php');
-		include_once(DIR_MOTTE.'/mteCnxMySql.class.php');
-		include_once(DIR_MOTTE.'/mteRecordSet.class.php');
-		include_once(DIR_MOTTE.'/mteDataSql.class.php');
-		include_once(DIR_MOTTE.'/mteTableSql.class.php');
-		include_once(DIR_MOTTE.'/mteOrderSql.class.php');
-		include_once(DIR_MOTTE.'/mteWhereSql.class.php');
-		break;
+if (defined('DB_DRIVER')) {
+	switch (DB_DRIVER) {
+		case 'mySql':
+			include_once(DIR_MOTTE.'/mteCnx.class.php');
+			include_once(DIR_MOTTE.'/mteCnxMySql.class.php');
+			include_once(DIR_MOTTE.'/mteRecordSet.class.php');
+			include_once(DIR_MOTTE.'/mteDataSql.class.php');
+			include_once(DIR_MOTTE.'/mteTableSql.class.php');
+			include_once(DIR_MOTTE.'/mteOrderSql.class.php');
+			include_once(DIR_MOTTE.'/mteWhereSql.class.php');
+			break;
+	}	
 }
 
-class mteModel {
 
+class mteModel {
+	private static $_instance;
 	private $_tables;
 	private $_cnx;
 	private $_dataSql;
+	private $_obj;
 
 	/**
 	 * Constructor
@@ -38,6 +42,7 @@ class mteModel {
 	 * @return cnx
 	 */
 	public function __construct() {
+		$this->_obj     = array();	
 		$this->_tables  = array();
 		$this->_dataSql = NULL;
 		$this->_cnx     = NULL;
@@ -50,6 +55,13 @@ class mteModel {
 	 */
 	public function __destruct() {
 
+	}
+
+	public static function get() {
+		if (!isset(self::$_instance)) {
+			self::$_instance = new mteModel();
+		}
+		return self::$_instance;
 	}
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -71,13 +83,31 @@ class mteModel {
 	}
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	//              M O D E L   O B J E C T
+	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	public function getObject($model) {
+		if (!array_key_exists('mdl'.strtolower($model), $this->_obj)) {
+			$scr = (!defined('DIR_MODEL')?DIR_ROOT.'/model':DIR_MODEL). '/' . strtolower(str_replace('_', '/', $model)) . '.model.php';
+			if (is_readable($scr) && is_file($scr)) {
+				include_once ($scr);
+				$pos = strpos($model, '_');
+				if ($pos === false) {
+					$objMdl = 'mdl' . ucfirst($model);
+				} else {
+					$objMdl = 'mdl' . ucfirst(substr($model, $pos + 1));
+				}
+				$this->_obj['mdl'.strtolower($model)] = new $objMdl(mteModel::get());
+			}
+			else {
+				die(__('Unknown model').' '.$model);
+			}
+		}
+		return $this->_obj['mdl'.strtolower($model)];
+	}
+
+	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//                 D A T A   S Q L
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	/**
-	 * get object dataSql
-	 *
-	 * @return mteDataSql
-	 */
 	public function getDataSql() {
 		if (!($this->_dataSql instanceof mteDataSql)) {
 			$this->_dataSql = new mteDataSql($this->getCnx());
@@ -98,7 +128,8 @@ class mteModel {
 				include_once($file);
 				$objName = $prefix . $name;
 				$tableObj = new $objName($this->getCnx());
-			} else {
+			}
+			else {
 				$tableObj = new mteTableSql($name, $this->getCnx(), true);
 			}
 			$this->_tables[$name] = $tableObj;

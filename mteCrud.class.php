@@ -215,13 +215,13 @@ class mteCrud {
 	//               P R I V A T E
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -	
 	private function _getErrorHtml($txt)  {
-		$tpl = mteApp::get()->getTemplate($this->_htmlError);
+		$tpl = mteCtr::get()->getTemplate($this->_htmlError);
 		$tpl->setVar('ERROR', $txt);
 		return $tpl->getHtml();
 	}
 
 	private function _getNotificationHtml($txt)  {
-		$tpl = mteApp::get()->getTemplate($this->_htmlNotification);
+		$tpl = mteCtr::get()->getTemplate($this->_htmlNotification);
 		$tpl->setVar('MESSAGE', $txt);
 		return $tpl->getHtml();
 	}
@@ -271,7 +271,7 @@ class mteCrud {
 		// frm
 		$htmlFrm = '';
 		if (is_readable($this->_htmlForm)) {
-			$tplForm = mteApp::get()->getTemplate($this->_htmlForm);
+			$tplForm = mteCtr::get()->getTemplate($this->_htmlForm);
 			$tplForm->setVar('RECORD', $record);
 			$tplForm->setVar('READONLY', $readonly);
 			$tplForm->setVar('ERROR', $this->_getErrorHtml($error));
@@ -473,7 +473,7 @@ class mteCrud {
 			$currentPage = 1;
 		}
 
-		$tpl = mteApp::get()->getTemplate($this->_htmlGrid);
+		$tpl = mteCtr::get()->getTemplate($this->_htmlGrid);
 		$tpl->setVar('CRUD_ID', $this->_crud_id);
 		$tpl->setVar('LABELS',  $this->_labels);
 		$tpl->setVar('COLUMNS', $fieldsGrid);
