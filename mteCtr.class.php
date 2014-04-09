@@ -43,6 +43,7 @@ include_once(DIR_MOTTE.'/lib/gettext/stringReader.php');
 include_once(DIR_MOTTE.'/mtei18n.class.php');
 include_once(DIR_MOTTE.'/lib/class.inputfilter.php');
 include_once(DIR_MOTTE.'/mteRestManager.class.php');
+include_once(DIR_MOTTE.'/mteRestClient.class.php');
 
 
 // alias
@@ -64,6 +65,7 @@ class mteCtr {
 	private $_htmlResponse;
 	private $_response;
 	private $_restManager;
+	private $_restClient;
 
 	/**
 	 * Constructor
@@ -200,6 +202,16 @@ class mteCtr {
 			$this->_restManager = new mteRestManager();
 		}
 		return $this->_restManager;
+	}
+
+	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	//          R E S T   C L I E N T
+	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	public function getRClient() {
+		if (!isset($this->_restClient)) {
+			$this->_restClient = new mteRestClient();
+		}
+		return $this->_restClient;
 	}
 
 

@@ -830,7 +830,7 @@ class mteTableSql extends mteDataSql {
 	 *
 	 * @access public
 	 * @param string $where
-	 * @paramarray	$record	El record es por si no se le pasa where,
+	 * @param array	$record	El record es por si no se le pasa where,
 	 * 			el record contiene los registros a borrar
 	 * 			por lo que se construye el where a partir de
 	 * 			los registros a borrar
