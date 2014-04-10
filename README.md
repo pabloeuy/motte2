@@ -65,6 +65,7 @@ Define routes:
     mteCtr::get()->getRM()->route('DELETE', 'routeForDelete');//it call a method and assign parameters to $_GET(defined by route)
     
 And run:
+
     mteCtr::get()->getRM()->run();
     
 To response:

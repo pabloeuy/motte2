@@ -42,9 +42,9 @@ class mteRestClient {
     }
 
     /**
-     * Obtiene mediante el metodo GET un json que luego lo transforma en un array, generalmente para obtener un recurso
-     * @param  string $uri la ruta a realizar la peticion de servicio REST
-     * @return los datos que se recibio mediante GET
+     * Retrieve by GET method a json which then transforms into an array, usually to retrieve a resource
+     * @param  string $uri : the route make request GET
+     * @return the data received via GET
      */
     public function get($uri){
         if($this->_auth){
@@ -63,10 +63,10 @@ class mteRestClient {
     }
 
     /**
-     * Envia mediante POST un json a partir de un array PHP, generalmente para agregar/editar un recurso
-     * @param  string $uri la ruta a realizar la peticion de servicio REST
-     * @param  array $arr el array a enviar como datos
-     * @return la respuesta obtenida al ejecutar el servicio REST a partir del POST enviado
+     * Send by json POST from a PHP array, usually to add/edit a resource
+     * @param  string $uri : the route make request POST
+     * @param  array $arr  : data to send
+     * @return the response obtained by calling the REST by POST
      */
     public function post($uri,$arr){
         if($this->_auth){
@@ -88,9 +88,9 @@ class mteRestClient {
     }
 
     /**
-     * Envia mediante DELETE una peticion de borrado de un recurso
-     * @param  string $uri la ruta a realizar la peticion de servicio REST
-     * @return la respuesta obtenida al ejecutar el servicio REST a partir del DELETE enviado, si borro o no el recurso
+     * Send by DELETE to delete a resource (works like GET)
+     * @param  string $uri : the route make request DELETE
+     * @return the response obtained by calling the REST by DELETE
      */
     public function delete($uri){
     	if($this->_auth){
@@ -106,11 +106,11 @@ class mteRestClient {
     }
 
     /**
-     * Envia la respuesta al sistema si se pudo borrar o no el recurso
-     * @param  string $uri la ruta a realizar la peticion de servicio REST
+     * Work like DELETE and send a response to client side in the MVC App
+     * @param  string $uri : the route make request DELETE
      */
     public function deleteWithResponse($uri){
-        $response=RestClient::delete($uri);
+        $response=self::delete($uri);
         if($response->code==MTE_RESTCLIENT_OK_RESPONSE){
             mteCtr::get()->getResponse()->setStatusOk();
             mteCtr::get()->getResponse()->addBlock("response",$response);
@@ -121,12 +121,12 @@ class mteRestClient {
     }
 
     /**
-     * Envia la respuesta al sistema si se pudo guardar o no el recurso
-     * @param  string $uri la ruta a realizar la peticion de servicio REST
-     * @param  array $arr el array a enviar como datos
+     * Work like POST and send a response to client side in the MVC App
+     * @param  string $uri : the route make request POST
+     * @param  array $arr  : data to send
      */
     public function postWithResponse($uri,$arr){
-        $response=RestClient::post($uri,$arr);
+        $response=self::post($uri,$arr);
         if($response->code==MTE_RESTCLIENT_OK_RESPONSE){
             mteCtr::get()->getResponse()->setStatusOk();
             mteCtr::get()->getResponse()->addBlock("response",$response);
@@ -137,9 +137,9 @@ class mteRestClient {
     }
 
     /**
-     * Indica si una respuesta de GET tiene un error
-     * @param  array  $response respuesta de la API REST
-     * @return boolean           si tiene error
+     * Indicates if a GET response has an error
+     * @param  array   : $response API REST's response
+     * @return boolean : if has an error
      */
     public function hasError($response){
         return isset($response['error']);
