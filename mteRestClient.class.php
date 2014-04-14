@@ -9,11 +9,8 @@
  * @version 2.5
  * @author 	Maicol Bentancor (maibenta@correo.ucu.edu.uy) /
  *			Pablo Ilundain (pabloilundain@gmail.com) /
- * 			Pedro Gauna (pgauna@gmail.com) /
- * 			Braulio Rios (braulioriosf@gmail.com) /
  * 			Pablo Erartes (pabloeuy@gmail.com)
  */
-define('MTE_RESTCLIENT_DEBUG', false);
 define('MTE_RESTCLIENT_OK_RESPONSE', 200);
 include_once(DIR_MOTTE.'/lib/httpful.phar');
 
@@ -22,13 +19,19 @@ class mteRestClient {
 	private $_user;
 	private $_pass;
 	private $_auth;
+    private $_debug;
+    private $_uriApi;
+
 
 	/**
      * Constructor
      */
-    public function __construct($authenticate = true) {
-    	$this->_auth = $authenticate;
+    public function __construct($uriApi = '', $authenticate = true) {
+    	$this->_auth   = $authenticate;
+        $this->_debug  = false;
+        $this->_uriApi = $uriApi;
     }
+
     /*
      * Destructor
      */
@@ -41,6 +44,20 @@ class mteRestClient {
     	$this->_pass = $pass;
     }
 
+    public function setDebug($state = false) {
+        $this->_debug = $state;
+    }
+
+    public function setUriApi($uri = '') {
+        $this->_uriApi = $uri;
+    }
+
+    private function _debug($msg = '') {
+        if ($this->_debug == true) {
+            print($msg);
+        }
+    }
+
     /**
      * Retrieve by GET method a json which then transforms into an array, usually to retrieve a resource
      * @param  string $uri : the route make request GET
@@ -48,17 +65,15 @@ class mteRestClient {
      */
     public function get($uri){
         if($this->_auth){
-	        $response = json_decode(\Httpful\Request::get(DIR_API_REST.$uri)
+	        $response = json_decode(\Httpful\Request::get($this->_uriApi.$uri)
 	                ->authenticateWith($this->_user,$this->_pass)
 	                ->send(),true);
 
         }else{
-        	$response = json_decode(\Httpful\Request::get(DIR_API_REST.$uri)
+        	$response = json_decode(\Httpful\Request::get($this->_uriApi.$uri)
 	                ->send(),true);
         }
-        if(MTE_RESTCLIENT_DEBUG){
-        	print($response);
-        }
+        $this->_debug($response);
         return $response;
     }
 
@@ -70,20 +85,18 @@ class mteRestClient {
      */
     public function post($uri,$arr){
         if($this->_auth){
-	        $response = \Httpful\Request::post(DIR_API_REST.$uri)
+	        $response = \Httpful\Request::post($this->_uriApi.$uri)
 		                ->sendsJson()
 		                ->authenticateWith($this->_user,$this->_pass)
 		                ->body(json_encode($arr))
 		                ->send();
 		}else{
-			$response = \Httpful\Request::post(DIR_API_REST.$uri)
+			$response = \Httpful\Request::post($this->_uriApi.$uri)
 		                ->sendsJson()
 		                ->body(json_encode($arr))
 		                ->send();
 		}
-        if(MTE_RESTCLIENT_DEBUG){
-        	print($response);
-        }
+        $this->_debug($response);
         return $response;
     }
 
@@ -94,14 +107,14 @@ class mteRestClient {
      */
     public function delete($uri){
     	if($this->_auth){
-	        $response = \Httpful\Request::delete(DIR_API_REST.$uri)
+	        $response = \Httpful\Request::delete($this->_uriApi.$uri)
 		               	->authenticateWith($this->_user,$this->_pass)
 		                ->send();
 	    }else{
-	    	$response = \Httpful\Request::delete(DIR_API_REST.$uri)
+	    	$response = \Httpful\Request::delete($this->_uriApi.$uri)
 		                ->send();
 	    }
-        if(MTE_RESTCLIENT_DEBUG){print($response);}
+        $this->_debug($response);
         return $response;
     }
 

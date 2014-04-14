@@ -207,9 +207,9 @@ class mteCtr {
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//          R E S T   C L I E N T
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	public function getRClient() {
+	public function getRClient($uri = '', $auth = true) {
 		if (!isset($this->_restClient)) {
-			$this->_restClient = new mteRestClient();
+			$this->_restClient = new mteRestClient(defined('DIR_API_REST')?DIR_API_REST:$uri, defined('AUTH_API_REST')?AUTH_API_REST:$auth);
 		}
 		return $this->_restClient;
 	}
