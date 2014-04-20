@@ -12,15 +12,11 @@
  * 			Pablo Erartes (pabloeuy@gmail.com)
  */
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//                P R O P E R T I E S
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 define('SRV_HTML', 0);
 define('SRV_AJAX_XML', 1);
 define('SRV_AJAX_HTML', 2);
 define('SRV_AJAX_JSON', 3);
 define('SRV_UPLOADIFY', 4);
-
 
 // Default defined
 if (!defined('MTE_ENGINE_TEMPLATE')) {
@@ -46,29 +42,30 @@ include_once(DIR_MOTTE.'/lib/gettext/gettext.php');
 include_once(DIR_MOTTE.'/lib/gettext/stringReader.php');
 include_once(DIR_MOTTE.'/mtei18n.class.php');
 include_once(DIR_MOTTE.'/lib/class.inputfilter.php');
-include_once(DIR_MOTTE.'/lib/class.inputfilter.php');
-include_once(DIR_MOTTE.'/lib/slim/Slim/Slim.php');
+include_once(DIR_MOTTE.'/mteRestManager.class.php');
+include_once(DIR_MOTTE.'/mteRestClient.class.php');
+
 
 // alias
 function __($text = '') {
-	return MTE_ACTIVE_TRANSLATE == '1'?mteApp::get()->_($text):$text;
+	return MTE_ACTIVE_TRANSLATE == '1'?mteCtr::get()->_($text):$text;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //                C L A S S
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class mteApp {
+class mteCtr {
 
 	private static $_instance;
 	private $_obj = array();
 	private $_lang;
-	private $_model;
 	private $_service;
 	private $_module;
 	private $_method;
 	private $_htmlResponse;
 	private $_response;
 	private $_restManager;
+	private $_restClient;
 
 	/**
 	 * Constructor
@@ -88,11 +85,11 @@ class mteApp {
 
 	/**
 	 *
-	 * @return mteApp
+	 * @return mteCtr
 	 */
 	public static function get() {
 		if (!isset(self::$_instance)) {
-			self::$_instance = new mteApp();
+			self::$_instance = new mteCtr();
 		}
 		return self::$_instance;
 	}
@@ -134,7 +131,7 @@ class mteApp {
 
 		$src = !defined('DIR_CONTROLLER')?DIR_ROOT.'/controller':DIR_CONTROLLER . "/$module.controller.php";
 		if (is_readable($src)) {
-			$ctr = self::get()->getControllerObject($module);
+			$ctr = $this->getControllerObject($module);
 			if (method_exists($ctr, $method)) {
 				$result = true;
 			}
@@ -144,14 +141,14 @@ class mteApp {
 
 	public function execute($module, $method = '', $extra = '') {
 		$result = '';
-		$error = '';
+		$error  = '';
 		$module = strtolower($module);
 		$method = strtolower($method);
 
 		$src = !defined('DIR_CONTROLLER')?DIR_ROOT.'/controller':DIR_CONTROLLER . "/$module.controller.php";
 
 		if (is_readable($src)) {
-			$ctr = self::get()->getControllerObject($module);
+			$ctr = $this->getControllerObject($module);
 			if (method_exists($ctr, $method)) {
 				$result = $ctr->$method($extra);
 			} else {
@@ -169,7 +166,7 @@ class mteApp {
 	public function ajax($module, $method) {
 		$src = !defined('DIR_CONTROLLER')?DIR_ROOT.'/controller':DIR_CONTROLLER . '/' . strtolower($module) . '.controller.php';
 		if (is_readable($src)) {
-			$ctr = self::get()->getControllerObject($module);
+			$ctr = $this->getControllerObject($module);
 			if (method_exists($ctr, $method)) {
 				$ctr->$method();
 			} else {
@@ -200,25 +197,23 @@ class mteApp {
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//          R E S T   M A N A G E R
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	private function _getRESTManager($params = '') {
+	public function getRM() {
 		if (!isset($this->_restManager)) {
-			if (is_array($params)) {
-				$this->_restManager = new Slim($params);
-			}
-			else {
-				$this->_restManager = new Slim();	
-			}
+			$this->_restManager = new mteRestManager();
 		}
 		return $this->_restManager;
 	}
 
-	public function getRM($params = '') {
-		return $this->_getRESTManager($params);
+	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	//          R E S T   C L I E N T
+	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	public function getRClient($uri = '', $auth = true) {
+		if (!isset($this->_restClient)) {
+			$this->_restClient = new mteRestClient(defined('DIR_API_REST')?DIR_API_REST:$uri, defined('AUTH_API_REST')?AUTH_API_REST:$auth);
+		}
+		return $this->_restClient;
 	}
 
-	public function getRESTManager($params = '') {
-		return $this->_getRESTManager($params);
-	}
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//          R E S P O N S E   A J A X   /   J S O N
@@ -245,14 +240,14 @@ class mteApp {
 	}
 
 	public function setHtmlVar($name, $value) {
-		mteApp::get()->htmlResponse()->addVarTpl($name, $value);
+		mteCtr::get()->htmlResponse()->addVarTpl($name, $value);
 	}
 
 	public function getHtml($template = ''){
-		$tpl = mteApp::get()->getTemplate($template == ''?'page':$template);
-		$tpl->setVar('JS', mteApp::get()->htmlResponse()->getJs());
-        $tpl->setVar('CSS', mteApp::get()->htmlResponse()->getCss());
-		foreach (mteApp::get()->htmlResponse()->getVarTpl() as $key => $value) {
+		$tpl = mteCtr::get()->getTemplate($template == ''?'page':$template);
+		$tpl->setVar('JS', mteCtr::get()->htmlResponse()->getJs());
+        $tpl->setVar('CSS', mteCtr::get()->htmlResponse()->getCss());
+		foreach (mteCtr::get()->htmlResponse()->getVarTpl() as $key => $value) {
         	$tpl->setVar($key, $value);
 		}
 		return $tpl->getHtml();
@@ -291,44 +286,5 @@ class mteApp {
 		}
 		return $text;
 	}
-
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	//                           M O D E L
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	public function getModel() {
-		if (!isset($this->_model)) {
-			$this->_model = new mteModel();
-		}
-		return $this->_model;
-	}
-
-	public function getTable($tableName) {
-		return $this->getModel()->getTable($tableName);
-	}
-
-	public function getDataSql() {
-		return $this->getModel()->getDataSql();
-	}
-
-	public function getModelObject($model) {
-		if (!array_key_exists('mdl'.strtolower($model), $this->_obj)) {
-			$scr = (!defined('DIR_MODEL')?DIR_ROOT.'/model':DIR_MODEL). '/' . strtolower(str_replace('_', '/', $model)) . '.model.php';
-			if (is_readable($scr) && is_file($scr)) {
-				include_once ($scr);
-				$pos = strpos($model, '_');
-				if ($pos === false) {
-					$objMdl = 'mdl' . ucfirst($model);
-				} else {
-					$objMdl = 'mdl' . ucfirst(substr($model, $pos + 1));
-				}
-				$this->_obj['mdl'.strtolower($model)] = new $objMdl($this->getModel());
-			}
-			else {
-				die(__('Unknown model').' '.$model);
-			}
-		}
-		return $this->_obj['mdl'.strtolower($model)];
-	}
 }
-
 ?>

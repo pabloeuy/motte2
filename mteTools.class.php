@@ -59,18 +59,12 @@ class tools {
 	}
 
 	static function getAge($birth, $now = ''){
-		$result = 0;
-		list($year, $month, $day) = explode("-", $birth);
-		if (checkdate($month, $day, $year)){
-			$now       = explode('-', ($now == ''?date('Y-m-d'):$now));
-			$result    = (int)$now[0]-$year;
-			$month_dif = (int)$now[1]-$month;
-			$day_dif   = (int)$now[2]-$day;
-			if ($day_dif < 0 || $month_dif < 0){
-				$result--;
-			}
-		}
-		return $result;
+        date_default_timezone_set("UTC");
+        $dob = date("Y-m-d",strtotime($birth));
+        $dobObject = new DateTime($dob);
+        $nowObject = new DateTime();
+    	$diff = $dobObject->diff($nowObject);
+		return $diff->y;
 	}
 
 	public static function sanitizeFileName($dangerous_filename) {
@@ -255,6 +249,34 @@ class tools {
 	static function getNameDayWeek($d) {
 		$days = tools::getNameDays();
 		return $days[$d];
+	}
+
+	static function getMtxCalendar($year, $month) {
+		$calendar = array();
+		$nroWeek = 1;
+		for ($d = 0; $d < 7; $d++) {
+			$calendar[1][$d] = array('day'=>'');
+		}
+		$dayMonth = date('t', mktime(0, 0, 0, $month, 1, $year));
+		$m = ($month<10?'0'.$month:$month);
+		$y = $year;
+		for ($day = 1; $day <= $dayMonth; $day++) {
+			$dayWeek  = date('w', mktime(0, 0, 0, $month, $day, $year));
+			// Active date
+			$day = ($day<10?'0'.$day:$day);
+			$calendar[$nroWeek][$dayWeek]['day']       = $day;
+			$calendar[$nroWeek][$dayWeek]['now']       = "$y-$m-$day" == date('Y-m-d');
+			$calendar[$nroWeek][$dayWeek]['dayParam']  = "$y|$m|$day";
+			$calendar[$nroWeek][$dayWeek]['activeDay'] = "$y-$m-$day";
+			if ($dayWeek == 6){
+				$nroWeek++;
+			}
+		}
+		// empty cell
+		for ($day = $dayWeek+1; $day <= 6; $day++) {
+			$calendar[$nroWeek][$day]['day'] = '';
+		}
+		return $calendar;
 	}
 }
 ?>
