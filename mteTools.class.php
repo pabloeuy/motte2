@@ -167,7 +167,15 @@ class tools {
 
 	static function mysqlTodmy($date){
 		$aux = explode('-', $date);
-		return $aux[2].'/'.$aux[1].'/'.$aux[0];
+		if (is_array($aux) && count($aux) == 3) {
+			return $aux[2].'/'.$aux[1].'/'.$aux[0];
+		}
+		return '00/00/0000';
+	}
+
+	static function validymdMySql($date){
+		$date = explode("-", $date);
+		return count($date)===3 && checkdate($date[1], $date[2], $date[0]);
 	}
 
 	static function getYM($month, $year) {
@@ -219,12 +227,21 @@ class tools {
 		return $meses[(int)($m - 1)];
 	}
 
+	static function getNameDay($d) {
+		$days = ymTools::getDays();
+		return $days[$d];
+	}
+
 	static function getYear($ym) {
 		return (int) substr($ym, 0, 4);
 	}
 
 	static function getMonth($ym) {
 		return (int) ($ym[4] . $ym[5]);
+	}
+
+	static function getDay($ym) {
+		return (int) ($ym[6] . $ym[7]);
 	}
 
 	static function dayOfYear($y) {
