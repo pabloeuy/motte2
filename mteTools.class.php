@@ -191,7 +191,11 @@ class tools {
 	}
 
 	static function YMtoString($ym, $separador = '/') {
-		return $ym[4] . $ym[5] . $separador . substr($ym, 0, 4);
+		return substr($ym, 0, 4) . $separador . $ym[4] . $ym[5];
+	}
+
+	static function stringToYM($ym, $separador = '/') {
+		return str_replace("/", "", $ym);
 	}
 
 	static function MYtoYM($ym) {
@@ -227,8 +231,10 @@ class tools {
 		return $meses[(int)($m - 1)];
 	}
 
-	static function getNameDay($d) {
-		$days = ymTools::getDays();
+	static function getNameDay($date) {
+		$days    = ymTools::getNameDays();
+		$dateArr = explode ("-", $date);
+		$d       = date("w", mktime(0,0,0,$dateArr[1],$dateArr[2],$dateArr[0]));
 		return $days[$d];
 	}
 
@@ -240,8 +246,14 @@ class tools {
 		return (int) ($ym[4] . $ym[5]);
 	}
 
-	static function getDay($ym) {
-		return (int) ($ym[6] . $ym[7]);
+	static function getDayDate($date) {
+		$aux = explode("-", $date);
+		return (is_array($aux) && count($aux) == 3) ? (int) ($aux[2]) : "";
+	}
+
+	static function getMonthDate($date) {
+		$aux = explode("-", $date);
+		return (is_array($aux) && count($aux) == 3) ? (int) ($aux[1]) : "";
 	}
 
 	static function dayOfYear($y) {
