@@ -258,9 +258,9 @@ class InputFilter {
 		);
 
 		// convert hex
-		$source = preg_replace('/&#x([a-f0-9]+);/mi',"chr(0x\\1)", $source);	// hex notation
+		//$source = preg_replace('/&#x([a-f0-9]+);/mei',"chr(0x\\1)", $source);	// hex notation
 		$source = preg_replace_callback(
-		    '/&#x([a-f0-9]+);/mei',
+		    '/&#x([a-f0-9]+);/mi',
 		    function($m) { return "chr(0x".$m[1].")"; },
 		    $source
 		);
