@@ -191,7 +191,7 @@ class tools {
 	}
 
 	static function YMtoString($ym, $separador = '/') {
-		return substr($ym, 0, 4) . $separador . $ym[4] . $ym[5];
+		return substr($ym, 0, 4) . $separador . substr($ym, 4, 5);
 	}
 
 	static function stringToYM($ym, $separador = '/') {
@@ -243,7 +243,7 @@ class tools {
 	}
 
 	static function getMonth($ym) {
-		return (int) ($ym[4] . $ym[5]);
+		return (int) substr($ym, 4, 5);
 	}
 
 	static function getDayDate($date) {
