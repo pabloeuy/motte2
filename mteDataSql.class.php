@@ -139,20 +139,21 @@ class mteDataSql {
 		else {
 			if (method_exists('mysqli_result', 'fetch_all')) { # Compatibility layer with PHP < 5.3
                 $rSet->addData($resource->fetch_all(MYSQLI_NUM));
+			    $resource->free();
             }
             else {
 				while ($row = $resource->fetch_assoc()) {
 					$rSet->addRecord($row);
     			}
-			    $resource->free();
+    			$resource->free();
             }
 		}
 		return $rSet;
 	}
 
 	/**
-	* 
-	* @return 
+	*
+	* @return
 	* @param object $sql
 	*/
 	public function getRecord($sql){
