@@ -47,7 +47,15 @@
          * @var string
          */
         protected $baseName;
-        
+
+        /**
+         *
+         *
+         * @access protected
+         * @var string
+         */
+        protected $port;
+
         /**
          *
          * @access protected
@@ -86,6 +94,13 @@
          */
         protected $debug;
 
+        /**
+         * On/Off Debug
+         * @access protected
+         * @var boolean
+         */
+        protected $charset;
+
 
         /**
          * Constructor
@@ -121,8 +136,10 @@
             $this->setIdDatabase();
             $this->setPersistent(false);
             $this->setDebug();
+            $this->setPort();
+            $this->setCharset('utf8');
         }
-        
+
         /**
          *
          *
@@ -132,6 +149,17 @@
          */
         public function setHost($hostName = ''){
             $this->hostName = $hostName;
+        }
+
+        /**
+         *
+         *
+         * @access public
+         * @param string $host
+         * @return void
+         */
+        public function setPort($port = ''){
+            $this->port = $port;
         }
 
         /**
@@ -223,6 +251,17 @@
             $this->debug=$debug;
         }
 
+       /**
+         *
+         *
+         * @access public
+         * @param string $host
+         * @return void
+         */
+        public function setCharset($charset = ''){
+            $this->charset = $charset;
+        }
+
         /**
          *
          *
@@ -261,6 +300,17 @@
          * @param
          * @return string
          */
+        public function getPort(){
+            return $this->port;
+        }
+
+        /**
+         *
+         *
+         * @access public
+         * @param
+         * @return string
+         */
         public function getUser(){
             return $this->userName;
         }
@@ -285,6 +335,17 @@
          */
         public function getBaseName(){
             return $this->baseName;
+        }
+
+       /**
+         *
+         *
+         * @access public
+         * @param string $host
+         * @return void
+         */
+        public function getCharset(){
+            return $this->charset;
         }
 
         /**

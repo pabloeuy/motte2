@@ -451,6 +451,7 @@ class mteTableSql extends mteDataSql {
 			$query .= ' ORDER BY '.$order;
 		}
 
+		//print $query;
 		return $query;
 	}
 

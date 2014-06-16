@@ -134,6 +134,7 @@ class mteRecordSet implements Iterator {
 	}
 
 	//-----------------------------------END ITERATOR METHODS--------------------------------------
+
 	//------------------OTHER NAVIGATION METHODS---------------------
 	/**
 	 * Move the pointer to the first record
@@ -192,7 +193,7 @@ class mteRecordSet implements Iterator {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Initialize recordSet
 	 *
@@ -200,13 +201,13 @@ class mteRecordSet implements Iterator {
 	 * @return void
 	 */
 	public function clearData() {
-		$this->_link = NULL;
-		$this->_engine = NULL;
-		$this->_index = 0;
-		$this->_eof = 0;
-		$this->_bof = -1;
+		$this->_link    = NULL;
+		$this->_engine  = NULL;
+		$this->_index   = 0;
+		$this->_eof     = 0;
+		$this->_bof     = -1;
 		$this->_records = array ();
-		$this->record = NULL;
+		$this->record   = NULL;
 	}
 
 	/**
@@ -283,7 +284,6 @@ class mteRecordSet implements Iterator {
 		return ($this->_index);
 	}
 
-
 	/**
 	 * set a link to a query which the recordSet will handle
 	 * @return boolean $validResource
@@ -292,9 +292,9 @@ class mteRecordSet implements Iterator {
 	public function setLink($resource, $engine) {
 		if (is_resource($resource)) {
 			$this->_engine = $engine;
-			$currentSize = count($this->_records);
-			$this->_link = array ($resource, $currentSize, $this->_engine->getRecordCount($resource)); //resource, position where insert and lenght
-			$this->_eof = $currentSize+$this->_engine->getRecordCount($resource);
+			$currentSize   = count($this->_records);
+			$this->_link   = array ($resource, $currentSize, $this->_engine->getRecordCount($resource)); //resource, position where insert and lenght
+			$this->_eof    = $currentSize+$this->_engine->getRecordCount($resource);
 			$this->first();
 			return true;
 		}
@@ -308,8 +308,8 @@ class mteRecordSet implements Iterator {
 	 */
 	public function clearLink() {
 		$this->_engine = NULL;
-		$this->_link = NULL;
-		$this->_eof = count($this->_records);
+		$this->_link   = NULL;
+		$this->_eof    = count($this->_records);
 		$this->first();
 	}
 
@@ -375,6 +375,8 @@ class mteRecordSet implements Iterator {
 	private function _loadRecord() {
 		$this->record = NULL;
 		if ($this->_index > $this->_bof && $this->_index < $this->_eof) {
+
+			// MySQL resource
 			if ($this->_link !== NULL && $this->_index >= $this->_link[1]) {    //after the insert position of the link
 				if ($this->_index < $this->_link[1]+$this->_link[2]) {       //the index corresponds to a linked record
 					$this->record = $this->_engine->fetchRow($this->_link[0], $this->_index - $this->_link[1]);
@@ -392,8 +394,6 @@ class mteRecordSet implements Iterator {
 			return false;
 		}
 	}
-
-
 
 	/**
 	 * return an array with recordset content
@@ -422,7 +422,6 @@ class mteRecordSet implements Iterator {
 		}
 		return $result;
 	}
-
 
 	/**
 	 * get associative array indexed by the keyFields passed.
