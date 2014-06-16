@@ -1170,5 +1170,21 @@ class mteTableSql extends mteDataSql {
         }
         return $this->updateRecord($record,$where);
     }
+
+    /**
+     * Inserta o actualiza dependiendo si se encuentra el registro
+     *
+     * @access public
+     * @param  array  $record array a insertar/actualizar
+     * @param  string $where filtro para buscar si ya existe para actualizar, sino se inserta
+     * @return string
+     */
+    public function upsertRecord($record,$where) {
+        if($this->exists($where)){
+        	return $this->updateRecord($record,$where);
+        }else{
+        	return $this->insertRecord($record);
+        }
+    }
 }
 ?>

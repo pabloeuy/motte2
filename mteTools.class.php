@@ -167,7 +167,15 @@ class tools {
 
 	static function mysqlTodmy($date){
 		$aux = explode('-', $date);
-		return $aux[2].'/'.$aux[1].'/'.$aux[0];
+		if (is_array($aux) && count($aux) == 3) {
+			return $aux[2].'/'.$aux[1].'/'.$aux[0];
+		}
+		return '00/00/0000';
+	}
+
+	static function validymdMySql($date){
+		$date = explode("-", $date);
+		return count($date)===3 && checkdate($date[1], $date[2], $date[0]);
 	}
 
 	static function getYM($month, $year) {
@@ -183,7 +191,11 @@ class tools {
 	}
 
 	static function YMtoString($ym, $separador = '/') {
-		return $ym[4] . $ym[5] . $separador . substr($ym, 0, 4);
+		return substr($ym, 0, 4) . $separador . $ym[4] . $ym[5];
+	}
+
+	static function stringToYM($ym, $separador = '/') {
+		return str_replace("/", "", $ym);
 	}
 
 	static function MYtoYM($ym) {
@@ -219,12 +231,29 @@ class tools {
 		return $meses[(int)($m - 1)];
 	}
 
+	static function getNameDay($date) {
+		$days    = ymTools::getNameDays();
+		$dateArr = explode ("-", $date);
+		$d       = date("w", mktime(0,0,0,$dateArr[1],$dateArr[2],$dateArr[0]));
+		return $days[$d];
+	}
+
 	static function getYear($ym) {
 		return (int) substr($ym, 0, 4);
 	}
 
 	static function getMonth($ym) {
 		return (int) ($ym[4] . $ym[5]);
+	}
+
+	static function getDayDate($date) {
+		$aux = explode("-", $date);
+		return (is_array($aux) && count($aux) == 3) ? (int) ($aux[2]) : "";
+	}
+
+	static function getMonthDate($date) {
+		$aux = explode("-", $date);
+		return (is_array($aux) && count($aux) == 3) ? (int) ($aux[1]) : "";
 	}
 
 	static function dayOfYear($y) {
