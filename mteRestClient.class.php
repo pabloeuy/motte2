@@ -22,11 +22,10 @@ class mteRestClient {
     private $_debug;
     private $_uriApi;
 
-
 	/**
      * Constructor
      */
-    public function __construct($uriApi = '', $authenticate = true) {
+    public function __construct($uriApi = '', $authenticate = false) {
     	$this->_auth   = $authenticate;
         $this->_debug  = false;
         $this->_uriApi = $uriApi;
@@ -39,7 +38,7 @@ class mteRestClient {
 
     }
 
-    public function setCredentials($user,$pass){
+    public function setCredentials($user, $pass){
     	$this->_user = $user;
     	$this->_pass = $pass;
     }

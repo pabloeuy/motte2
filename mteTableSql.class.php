@@ -450,8 +450,8 @@ class mteTableSql extends mteDataSql {
 		if ($order != '') {
 			$query .= ' ORDER BY '.$order;
 		}
-//print $query;
 
+		//print $query;
 		return $query;
 	}
 

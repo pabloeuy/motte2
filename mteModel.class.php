@@ -13,19 +13,22 @@
  */
 
 // driver
+include_once(DIR_MOTTE.'/mteCnx.class.php');
 if (defined('DB_DRIVER')) {
 	switch (DB_DRIVER) {
 		case 'mySql':
-			include_once(DIR_MOTTE.'/mteCnx.class.php');
 			include_once(DIR_MOTTE.'/mteCnxMySql.class.php');
-			include_once(DIR_MOTTE.'/mteRecordSet.class.php');
-			include_once(DIR_MOTTE.'/mteDataSql.class.php');
-			include_once(DIR_MOTTE.'/mteTableSql.class.php');
-			include_once(DIR_MOTTE.'/mteOrderSql.class.php');
-			include_once(DIR_MOTTE.'/mteWhereSql.class.php');
 			break;
-	}	
+		case 'mySqli':
+			include_once(DIR_MOTTE.'/mteCnxMySqli.class.php');
+			break;
+	}
 }
+include_once(DIR_MOTTE.'/mteRecordSet.class.php');
+include_once(DIR_MOTTE.'/mteDataSql.class.php');
+include_once(DIR_MOTTE.'/mteTableSql.class.php');
+include_once(DIR_MOTTE.'/mteOrderSql.class.php');
+include_once(DIR_MOTTE.'/mteWhereSql.class.php');
 
 
 class mteModel {
@@ -42,7 +45,7 @@ class mteModel {
 	 * @return cnx
 	 */
 	public function __construct() {
-		$this->_obj     = array();	
+		$this->_obj     = array();
 		$this->_tables  = array();
 		$this->_dataSql = NULL;
 		$this->_cnx     = NULL;
@@ -67,19 +70,36 @@ class mteModel {
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//                C O N E X I O N
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	public function getCnx() {
+	public function getCnx($hostName = '', $userName = '', $password = '', $database = '', $port = 3306, $persistent = false, $autoconnect = true, $debug = false, $charset = 'utf8') {
+		$hostName    = defined('DB_HOST')?DB_HOST:$hostName;
+		$userName    = defined('DB_USER')?DB_USER:$userName;
+		$password    = defined('DB_PASS')?DB_PASS:$password;
+		$database    = defined('DB_NAME')?DB_NAME:$database;
+		$persistent  = defined('DB_PERSISTENT')?DB_PERSISTENT:$persistent;
+		$autoconnect = defined('DB_AUTOCONNECT')?DB_AUTOCONNECT:$autoconnect;
+		$port        = defined('DB_PORT')?DB_PORT:$port;
+		$debug       = defined('DB_DEBUG')?DB_DEBUG:$debug;
+		$charset     = defined('DB_CHARSET')?DB_CHARSET:$charset;
+
 		// driver
 		switch (DB_DRIVER) {
 			case 'mySql':
 				if (!($this->_cnx instanceof mteCnxMySql)) {
-					$this->_cnx = new mteCnxMySql(DB_HOST, DB_USER, DB_PASS, DB_NAME, false, false);
-					$this->_cnx->connect(true);
-					$this->_cnx->setDebug(false);
-					mysql_set_charset('utf8', $this->_cnx->getIdDatabase());
+					$this->_cnx = new mteCnxMySql($hostName, $userName, $password, $database, $persistent, false, $port, $charset);
 				}
 				break;
-			}
-			return $this->_cnx;
+			case 'mySqli':
+				if (!($this->_cnx instanceof mteCnxMySqli)) {
+					$this->_cnx = new mteCnxMySqli($hostName, $userName, $password, $database, $persistent, false, $port, $charset);
+				}
+				break;
+		}
+		if ($autoconnect) {
+			$this->_cnx->connect(true);
+		}
+		$this->_cnx->setDebug($debug);
+
+		return $this->_cnx;
 	}
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -

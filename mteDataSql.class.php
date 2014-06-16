@@ -126,14 +126,26 @@ class mteDataSql {
 	*/
 	public function getRecordSet($sql = '', $numRows = -1 , $offset = -1){
 		if (($numRows > -1) || ($offset > -1)){
-			$resource = $this->getEngine()->getSqlResourceLimit($sql,$numRows,$offset);
+			$resource = $this->getEngine()->getSqlResourceLimit($sql, $numRows, $offset);
 		}
 		else{
 			$resource = $this->getEngine()->getSqlResource($sql);
 		}
+
 		$rSet = new mteRecordSet();
 		if ($resource && is_resource($resource)){
 			$rSet->setLink($resource, $this->getEngine());
+		}
+		else {
+			if (method_exists('mysqli_result', 'fetch_all')) { # Compatibility layer with PHP < 5.3
+                $rSet->addData($resource->fetch_all(MYSQLI_NUM));
+            }
+            else {
+				while ($row = $resource->fetch_assoc()) {
+					$rSet->addRecord($row);
+    			}
+			    $resource->free();
+            }
 		}
 		return $rSet;
 	}
@@ -144,7 +156,7 @@ class mteDataSql {
 	* @param object $sql
 	*/
 	public function getRecord($sql){
-		$recordSet = mteDataSql::getRecordSet($sql, 1, 0);
+		$recordSet = $this->getRecordSet($sql, 1, 0);
 		$recordSet->first();
 		return $recordSet->record;
 	}

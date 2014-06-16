@@ -29,7 +29,7 @@ class mteCnxMySql extends mteCnx {
 	  * @param 	boolean	$autoconnect
 	  * @return mteCnxMySql
 	  */
-	function __construct($hostName, $userName, $password, $baseName, $persistent = false, $autoconnect = true) {
+	function __construct($hostName, $userName, $password, $baseName, $persistent = false, $autoconnect = true, $port = 3306, $charset = 'utf8') {
 		//	Initializing
 		parent::__construct();
 
@@ -39,6 +39,8 @@ class mteCnxMySql extends mteCnx {
 		$this->setPass($password);
 		$this->setBaseName($baseName);
 		$this->setPersistent($persistent);
+		$this->setPort($port);
+		$this->setCharset($charset);
 		if($autoconnect){
 			$this->connect();
 		}
@@ -64,16 +66,18 @@ class mteCnxMySql extends mteCnx {
 		$result = false;
 		if($this->checkParams()){
 			if(!$this->getPersistent()){
-				$aux = @mysql_connect( $this->getHost(),
-					$this->getUser(),
-					$this->getPass(),
-					$newLink);
+				$aux = @mysql_connect(  $this->getHost(),
+										$this->getUser(),
+										$this->getPass(),
+										$newLink);
+				mysql_set_charset($this->getCharset(), $aux);
 			}
 			else{
 				$aux = @mysql_pconnect( $this->getHost(),
-					$this->getUser(),
-					$this->getPass(),
-					$newLink);
+										$this->getUser(),
+										$this->getPass(),
+										$newLink);
+				mysql_set_charset($this->getCharset(), $aux);
 			}
 			if($aux){
 				$result = @mysql_select_db($this->getBaseName(),$aux);
@@ -117,7 +121,7 @@ class mteCnxMySql extends mteCnx {
 	  * @param 	string 	$sql
 	  * @return array o boolean
 	  */
-	public function executeSql($sql = ''){	
+	public function executeSql($sql = ''){
 		$query = @mysql_query($sql, $this->getIdDatabase());
 		$result = false;
 		// Si hay error
