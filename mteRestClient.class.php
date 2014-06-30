@@ -12,6 +12,7 @@
  * 			Pablo Erartes (pabloeuy@gmail.com)
  */
 define('MTE_RESTCLIENT_OK_RESPONSE', 200);
+define('MTE_RESTCLIENT_FILE_BLOCK_NAME', "filename");
 include_once(DIR_MOTTE.'/lib/httpful.phar');
 
 class mteRestClient {
@@ -118,11 +119,10 @@ class mteRestClient {
     }
 
     /**
-     * Work like DELETE and send a response to client side in the MVC App
-     * @param  string $uri : the route make request DELETE
+     * Generate a Motte Response depending on the REST's response
+     * @param  mixed $response : REST's response
      */
-    public function deleteWithResponse($uri){
-        $response=self::delete($uri);
+    private static function getMteResponse($response){
         if($response->code==MTE_RESTCLIENT_OK_RESPONSE){
             mteCtr::get()->getResponse()->setStatusOk();
             mteCtr::get()->getResponse()->addBlock("response",$response);
@@ -130,6 +130,14 @@ class mteRestClient {
             mteCtr::get()->getResponse()->setStatusError();
             mteCtr::get()->getResponse()->addError($response);
         }
+    }
+
+    /**
+     * Work like GET and send a response to client side in the MVC App
+     * @param  string $uri : the route make request GET
+     */
+    public function getWithResponse($uri){
+        self::getMteResponse(self::get($uri));
     }
 
     /**
@@ -138,10 +146,29 @@ class mteRestClient {
      * @param  array $arr  : data to send
      */
     public function postWithResponse($uri,$arr){
-        $response=self::post($uri,$arr);
+        self::getMteResponse(self::post($uri,$arr));
+    }
+    /**
+     * Work like DELETE and send a response to client side in the MVC App
+     * @param  string $uri : the route make request DELETE
+     */
+    public function deleteWithResponse($uri){
+        self::getMteResponse(self::delete($uri));
+    }
+
+    /**
+     * Save a file downloaded by REST response and send it to the client side
+     * @param  mixed $response : REST's response
+     */
+    public static function mteRestFileResponse($response,$content_type,$file_name){
         if($response->code==MTE_RESTCLIENT_OK_RESPONSE){
             mteCtr::get()->getResponse()->setStatusOk();
-            mteCtr::get()->getResponse()->addBlock("response",$response);
+
+            header("Content-Type: $content_type");
+            $file_name = DIR_TMP."/".date("Ymdhis")."_$file_name";
+            file_put_contents($file_name, ltrim($response->body));
+
+            mteCtr::get()->getResponse()->addBlock(MTE_RESTCLIENT_FILE_BLOCK_NAME, $file_name);
         }else{
             mteCtr::get()->getResponse()->setStatusError();
             mteCtr::get()->getResponse()->addError($response);
@@ -149,8 +176,44 @@ class mteRestClient {
     }
 
     /**
+     * Retrieve by GET method a json (don't convert in PHP Array), usually to retrieve a resource
+     * @param  string $uri : the route make request GET
+     * @return the data received via GET
+     */
+    public function getRaw($uri){
+        if($this->_auth){
+            $response = \Httpful\Request::get($this->_uriApi.$uri)
+                        ->authenticateWith($this->_user,$this->_pass)
+                        ->send();
+
+        }else{
+            $response = \Httpful\Request::get($this->_uriApi.$uri)
+                        ->send();
+        }
+        $this->_debug($response);
+        return $response;
+    }
+
+    public function getWithFileResponse($uri,$content_type, $file_name){
+        $response=self::getRaw($uri);
+
+        mteCtr::get()->getResponse()->setStatusOk();
+
+        header("Content-Type: $content_type");
+        $file_name = DIR_TMP."/".date("Ymdhis")."_$file_name";
+
+        file_put_contents($file_name, ltrim($response));
+        mteCtr::get()->getResponse()->addBlock(MTE_RESTCLIENT_FILE_BLOCK_NAME, $file_name);
+    }
+
+    public function postWithFileResponse($uri,$arr,$content_type, $file_name){
+        $response=self::post($uri,$arr);
+        self::mteRestFileResponse($response,$content_type,$file_name);
+    }
+
+    /**
      * Indicates if a GET response has an error
-     * @param  array   : $response API REST's response
+     * @param  mixed   : $response API REST's response
      * @return boolean : if has an error
      */
     public function hasError($response){

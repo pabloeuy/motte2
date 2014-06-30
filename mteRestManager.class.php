@@ -157,8 +157,17 @@ class mteRestManager {
 		$this->_response(MTE_HTTP_RESPONSE_SUCCESS, $data);
 	}
 
+	public function responseFile($content_type, $data) {
+		header(sprintf('HTTP/%s %s', MTE_HTTP_VERSION, MTE_HTTP_RESPONSE_SUCCESS));
+		header('Content-Type', $content_type);
+		if ($data != '') {
+			echo $data;
+		}
+	}
+
 	public function getHttpMethod(){
 		return $_SERVER['REQUEST_METHOD'];
 	}
+
 }
 ?>
