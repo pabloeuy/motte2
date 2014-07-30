@@ -95,11 +95,11 @@ class mteCnxMySql extends mteCnx {
 	  * @return bool
 	  */
 	public function disconnect(){
-		$acutalState = true;
+		$actualState = true;
 		if( !(@mysql_close( $this->getIdDatabase()) ) ){
-			$acutalState = false; //Error on closing
+			$actualState = false; //Error on closing
 		}
-		return $acutalState;
+		return $actualState;
 	}
 
 	 /**

@@ -83,7 +83,7 @@ class mteRestClient {
      * @param  array $arr  : data to send
      * @return the response obtained by calling the REST by POST
      */
-    public function post($uri,$arr){
+    public function post($uri, $arr){
         if($this->_auth){
 	        $response = \Httpful\Request::post($this->_uriApi.$uri)
 		                ->sendsJson()
@@ -137,7 +137,14 @@ class mteRestClient {
      * @param  string $uri : the route make request GET
      */
     public function getWithResponse($uri){
-        self::getMteResponse(self::get($uri));
+        $response = self::get($uri);
+        if(!self::hasError($response)){
+            mteCtr::get()->getResponse()->setStatusOk();
+            mteCtr::get()->getResponse()->addBlock("response",json_encode($response));
+        }else{
+            mteCtr::get()->getResponse()->setStatusError();
+            mteCtr::get()->getResponse()->addError($response['error']);
+        }
     }
 
     /**
@@ -158,17 +165,24 @@ class mteRestClient {
 
     /**
      * Save a file downloaded by REST response and send it to the client side
-     * @param  mixed $response : REST's response
+     * @param  mixed $response      : REST's response
+     * @param  mixed $contentType   : Header content type for the file
+     * @param  mixed $fileName      : Name of the file to send as response
+     * @param  mixed $fileNameWDate : Has the name of the file a date generated to avoid duplicates?
      */
-    public static function mteRestFileResponse($response,$content_type,$file_name){
+    public static function mteRestFileResponse($response, $contentType, $fileName, $fileNameWDate = true){
         if($response->code==MTE_RESTCLIENT_OK_RESPONSE){
-            mteCtr::get()->getResponse()->setStatusOk();
+            header("Content-Type: $contentType");
 
-            header("Content-Type: $content_type");
-            $file_name = DIR_TMP."/".date("Ymdhis")."_$file_name";
-            file_put_contents($file_name, ltrim($response->body));
+            $fileNameDate = $fileNameWDate ? date("Ymdhis") . "_" : "";
+            $fileName = $fileNameDate . $fileName;
+            header("Content-Disposition: attachment; filename=$fileName");
+            header('Pragma: no-cache');
 
-            mteCtr::get()->getResponse()->addBlock(MTE_RESTCLIENT_FILE_BLOCK_NAME, $file_name);
+            $routeFile = DIR_TMP . "/" . $fileName;
+            file_put_contents($routeFile, ltrim($response->body));
+            readfile($routeFile);
+            die();
         }else{
             mteCtr::get()->getResponse()->setStatusError();
             mteCtr::get()->getResponse()->addError($response);
@@ -194,21 +208,24 @@ class mteRestClient {
         return $response;
     }
 
-    public function getWithFileResponse($uri,$content_type, $file_name){
+    public function getWithFileResponse($uri, $contentType, $fileName){
         $response=self::getRaw($uri);
 
-        mteCtr::get()->getResponse()->setStatusOk();
+        header("Content-Type: $contentType");
 
-        header("Content-Type: $content_type");
-        $file_name = DIR_TMP."/".date("Ymdhis")."_$file_name";
+        $fileNameDate = $fileNameWDate ? date("Ymdhis") . "_" : "";
+        $fileName = $fileNameDate . $fileName;
+        header("Content-Disposition: attachment; filename=$fileName");
+        header('Pragma: no-cache');
 
-        file_put_contents($file_name, ltrim($response));
-        mteCtr::get()->getResponse()->addBlock(MTE_RESTCLIENT_FILE_BLOCK_NAME, $file_name);
+        $routeFile = DIR_TMP . "/" . $fileName;
+        file_put_contents($routeFile, ltrim($response));
+        readfile($routeFile);
     }
 
-    public function postWithFileResponse($uri,$arr,$content_type, $file_name){
+    public function postWithFileResponse($uri, $arr, $contentType, $fileName){
         $response=self::post($uri,$arr);
-        self::mteRestFileResponse($response,$content_type,$file_name);
+        self::mteRestFileResponse($response,$contentType,$fileName);
     }
 
     /**
@@ -217,6 +234,6 @@ class mteRestClient {
      * @return boolean : if has an error
      */
     public function hasError($response){
-        return isset($response['error']);
+        return is_array($response) && isset($response['error']);
     }
 }

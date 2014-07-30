@@ -142,10 +142,14 @@ class mteDataSql {
 			    $resource->free();
             }
             else {
-				while ($row = $resource->fetch_assoc()) {
-					$rSet->addRecord($row);
-    			}
-    			$resource->free();
+            	if(is_object($resource)){
+					while ($row = $resource->fetch_assoc()) {
+						$rSet->addRecord($row);
+	    			}
+	    			$resource->free();
+	    		}else{
+	    			die(__("Failed to perform the query, maybe it's badly written"));
+	    		}
             }
 		}
 		return $rSet;

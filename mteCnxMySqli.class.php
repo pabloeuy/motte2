@@ -107,11 +107,11 @@ class mteCnxMySqli extends mteCnx {
 
 	 /**
 	  * executeSql()
-	  * Execute SQL sentence with and returns data on an array or fals in case of error
+	  * Execute SQL sentence and returns data on an array or false in case of error
 	  *
 	  * @access public
 	  * @param 	string 	$sql
-	  * @return array o boolean
+	  * @return array or boolean
 	  */
 	public function executeSql($sql = ''){
 		$result = false;

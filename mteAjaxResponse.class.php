@@ -118,7 +118,7 @@ class mteAjaxResponse {
 	}
 
 	/**
-	 * Limpia respuesta para ajax
+	 * Clean response for ajax
 	 */
 	public function clearResponse() {
 		$this->_error  = array ();
@@ -127,35 +127,35 @@ class mteAjaxResponse {
 	}
 
 	/**
-	 * Agrega error
+	 * Add error
 	 */
 	public function addError($error) {
 		$this->_error[] = $error;
 	}
 
 	/**
-	 * Setea status OK
+	 * Set status OK
 	 */
 	public function setStatusOk() {
 		$this->setStatus(1);
 	}
 
 	/**
-	 * Setea status ERROR
+	 * Set status ERROR
 	 */
 	public function setStatusError() {
 		$this->setStatus(0);
 	}
 
 	/**
-	 * Setea status
+	 * Set a status response
 	 */
 	public function setStatus($status) {
 		$this->_status = $status;
 	}
 
 	/**
-	 * Agrega bloque de xml
+	 * Add a block to response of xml
 	 *
 	 * @param string $tag
 	 * @param array $data
@@ -164,6 +164,12 @@ class mteAjaxResponse {
 		$this->_result[] = array ('tag'=>$tag, 'value'=>$record);
 	}
 
+	/**
+	 * Add a block to response of json
+	 *
+	 * @param mixed $id
+	 * @param mixed $value
+	 */
 	public function addBlockJSon($id, $value) {
 		$this->_result[$id] = $value;
 	}
@@ -173,7 +179,7 @@ class mteAjaxResponse {
 	//                                 X M L
 	//--------------------------------------------------------------------------
 	/**
-	 * parsea xml
+	 * Parse a xml
 	 */
 	public function parseXml() {
 		$xml = "<?xml version=\"1.0\" encoding=\"".$this->getCharset()."\"?>";
@@ -204,7 +210,7 @@ class mteAjaxResponse {
 	}
 
 	/**
-	 * devuelve XML
+	 * Retuen a xml
 	 *
 	 * @return string
 	 */
@@ -232,7 +238,7 @@ class mteAjaxResponse {
 	//                                 S T R I N G
 	//--------------------------------------------------------------------------
 	/**
-	 * parsea string
+	 * Parse a string
 	 */
 	public function parseString() {
 		$result = array();
@@ -243,7 +249,7 @@ class mteAjaxResponse {
 	}
 
 	/**
-	 * devuelve String
+	 * Return a string
 	 *
 	 * @return string
 	 */
