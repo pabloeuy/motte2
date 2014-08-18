@@ -67,6 +67,27 @@ class tools {
 		return $diff->y;
 	}
 
+	/**
+	 * Returns a combo from an array of records, the sort key and the name that acts of label
+	 * @param  array $records  : array of records
+	 * @param  string $id      : sort key
+	 * @param  string $label   : descriptive name of the combo
+     * @param  string $sort    : if sort for value(label)
+	 * @return el array combo of the pair pk-nombre
+	 */
+    public static function buildCombo($records, $id, $label, $sort = true){
+        $combo=array();
+        foreach ($records as $key => $value) {
+            $combo[$value[$id]]=$value[$label];
+        }
+
+        if($sort){
+            natsort($combo);
+        }
+
+        return $combo;
+    }
+
 	public static function sanitizeFileName($dangerous_filename) {
 		$dangerous_characters = array(" ", '"', "'", "&", "/", "\\", "?", "#", "=");
 		return str_replace($dangerous_characters, '', $dangerous_filename);
@@ -230,6 +251,11 @@ class tools {
 		$meses = tools::getNameMonths();
 		return $meses[(int)($m - 1)];
 	}
+
+	static function getDay($date){
+        $dateArr = explode ("-", $date);
+        return $dateArr[2];
+    }
 
 	static function getNameDay($date) {
 		$days    = ymTools::getNameDays();
