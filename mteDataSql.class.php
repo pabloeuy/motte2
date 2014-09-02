@@ -148,7 +148,7 @@ class mteDataSql {
 	    			}
 	    			$resource->free();
 	    		}else{
-	    			die(__("Failed to perform the query, maybe it's badly written"));
+	    			die(__("Failed to perform query, maybe it's badly written (motte). ".$sql));
 	    		}
             }
 		}
