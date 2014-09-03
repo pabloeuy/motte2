@@ -10,63 +10,53 @@ if ($module == MODULE_DEFAULT && $method == 'logout') {
     tools::killSession();
 
     //redirect to index and exit
-}
-//login
-elseif ($module == MODULE_DEFAULT && $method == 'login') {
+} elseif ($module == MODULE_DEFAULT && $method == 'login') {
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         //validate user and reply with mteCtr::get()->getResponse()
-    }else{
+    } else {
         //echo login html
     }
 
-}
-else {
+} else {
     // access control
     $userOk = tools::getSessionVar('userOk') != '';
 
     // requested service
     switch ($service) {
-        case SRV_HTML: {
+        case SRV_HTML:
             if ($userOk) {
                 //echo common html
-            }
-            else {
+            } else {
                 // force login
                 tools::killSession();
 
                 //redirect to index and exit
             }
             break;
-        }
-        case SRV_AJAX_XML: {
+        case SRV_AJAX_XML:
             if ($userOk) {
                 mteCtr::get()->ajax($module, $method);
-            }
-            else {
+            } else {
                 //set status error (session expired)
             }
             echo mteCtr::get()->getResponse()->getXml();
             break;
-        }
-        case SRV_AJAX_JSON: {
+        case SRV_AJAX_JSON:
             if ($userOk) {
                 mteCtr::get()->ajax($module, $method);
                 echo mteCtr::get()->getResponse()->getJSon();
             }
             break;
-        }
-        case SRV_AJAX_HTML: {
+        case SRV_AJAX_HTML:
             if ($userOk) {
                 echo mteCtr::get()->execute($module, $method);
             } else {
                 //set status error (session expired)
             }
             break;
-        }
-        case SRV_UPLOADIFY: {
+        case SRV_UPLOADIFY:
             echo mteCtr::get()->execute($module, $method);
             break;
-        }
     }
 }

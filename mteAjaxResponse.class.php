@@ -155,7 +155,7 @@ class mteAjaxResponse {
 	}
 
 	/**
-	 * Add a block to response of xml
+	 * Add a block to response
 	 *
 	 * @param string $tag
 	 * @param array $data
@@ -165,13 +165,34 @@ class mteAjaxResponse {
 	}
 
 	/**
-	 * Add a block to response of json
+	 * Add a block to response of json (DEPRECATED)
 	 *
 	 * @param mixed $id
 	 * @param mixed $value
 	 */
 	public function addBlockJSon($id, $value) {
+		trigger_error('Use addBlock instead', E_USER_NOTICE);
 		$this->_result[$id] = $value;
+	}
+
+	/**
+	 * Send a response with OK message
+	 *
+	 * @param mixed $msg
+	 */
+	public function responseSuccess($msg = '') {
+		$this->setStatusOk();
+		$this->addBlock('response',$msg);
+	}
+
+	/**
+	 * Send a response with Error message
+	 *
+	 * @param mixed $msg
+	 */
+	public function responseError($msg = '') {
+		$this->setStatusError();
+		$this->addError($msg);
 	}
 
 
@@ -210,7 +231,7 @@ class mteAjaxResponse {
 	}
 
 	/**
-	 * Retuen a xml
+	 * Return a xml
 	 *
 	 * @return string
 	 */
@@ -221,11 +242,20 @@ class mteAjaxResponse {
 	//--------------------------------------------------------------------------
 	//                                 J S O N
 	//--------------------------------------------------------------------------
+	/**
+	 * Parse a json
+	 */
 	public function parseJSon(){
-		// Result
 		$result = array();
+		// Status
+		$result['status'] = $this->_status;
+		// Result
 		foreach ($this->_result as $value) {
 			$result[$value['tag']] = $value['value'];
+		}
+		// Error
+		foreach ($this->_error as $value) {
+			$result['error'] = $value;
 		}
 		return json_encode($result);
 	}

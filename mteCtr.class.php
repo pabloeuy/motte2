@@ -124,6 +124,8 @@ class mteCtr {
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//                C O N T R O L L E R
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	/*TODO: NOT USED*/
 	public function verifyModuleMethod($module, $method) {
 		$result = false;
 		$module = strtolower($module);
