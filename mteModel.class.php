@@ -97,7 +97,7 @@ class mteModel {
 		if ($autoconnect) {
 			$this->_cnx->connect(true);
 		}
-		$this->_cnx->setDebug($debug);
+		$this->_cnx->setDebug(true);
 
 		return $this->_cnx;
 	}

@@ -402,10 +402,11 @@ class mteTableSql extends mteDataSql {
 
 		//auxFields (array)
 		$sqlFields = array ();
+
 		foreach ($auxFields as $key=>$value) {
 			//add table common fields
-			if (in_array($value, $this->_fields)) {
-				$sqlFields[$key] = $this->getTableName().".".$value;
+			if (in_array(str_replace($this->getTableName().".", '', $value), $this->_fields)) {				
+				$sqlFields[$key] = $this->getTableName().".".str_replace($this->getTableName().".", '', $value);
 			}
 			//add table foreign fields
 			if (in_array($value, array_keys($this->_fieldsForeign))) {
