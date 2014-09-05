@@ -4,8 +4,7 @@
  *
  * @filesource
  * @package    motte
- * @subpackage model
- * @version    1.0
+ * @version    2.5
  * @license    http://opensource.org/licenses/gpl-license.php GPL - GNU Public license
  * @author     Pedro Gauna (pgauna@gmail.com) /
  *             Carlos Gagliardi (carlosgag@gmail.com) /
@@ -58,7 +57,7 @@ class mteCnxMySqli extends mteCnx {
 	  * connect()
 	  * Connects to DB based on data stored in object attributes
 	  *
-	  * @param boolean $newLink
+	  * @param boolean $newLink (Only used in old Mysql)
 	  * @access public
 	  * @return void
 	  */
@@ -117,6 +116,7 @@ class mteCnxMySqli extends mteCnx {
 		$result = false;
 
 		$query = mysqli_query($this->getIdDatabase(), $sql);
+
 		if ($query === false){
 			$this->setEventMsg(mysqli_error($this->getIdDatabase()));
 		}

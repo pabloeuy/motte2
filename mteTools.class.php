@@ -4,9 +4,8 @@
  *
  * @filesource
  * @package motte
- * @subpackage tools
  * @license GPLv2 http://opensource.org/licenses/gpl-license.php GNU Public license
- * @version 2.44
+ * @version 2.5
  * @author 	Pedro Gauna (pgauna@gmail.com)
  * 			Braulio Rios (braulioriosf@gmail.com)
  * 			Pablo Erartes (pabloeuy@gmail.com)

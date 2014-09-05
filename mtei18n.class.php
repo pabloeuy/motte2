@@ -11,7 +11,6 @@
  *             Braulio Rios (braulioriosf@gmail.com) /
  *             Pablo Erartes (pabloeuy@gmail.com) /
  *             GBoksar/Perro (gustavo@boksar.info)
- * @link       http://motte.codigolibre.net Motte Website
  */
 
 class mtei18n {
@@ -72,7 +71,7 @@ class mtei18n {
      * @param string $text
      * @return string
      */
-    public function i18n($text) { 
+    public function i18n($text) {
         $domain = $this->getTextDomain();
         if (isset($this->l10n[$domain])){
 			return $this->_applyFilters('gettext', $this->l10n[$domain]->translate($text));
@@ -86,7 +85,7 @@ class mtei18n {
         return($this->i18n($text));
     }
 
-    private function _applyFilters($tag, $string) { 
+    private function _applyFilters($tag, $string) {
         if (!isset( $this->mergedFilters[$tag])){
             $this->_mergeFilters($tag);
         }

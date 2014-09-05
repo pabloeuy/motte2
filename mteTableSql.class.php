@@ -4,15 +4,13 @@
  *
  * @filesource
  * @package    motte
- * @subpackage model
- * @version    1.0
+ * @version    2.5
  * @license    http://opensource.org/licenses/gpl-license.php GPL - GNU Public license
  * @author     Pedro Gauna (pgauna@gmail.com) /
  *             Carlos Gagliardi (carlosgag@gmail.com) /
  *             Braulio Rios (braulioriosf@gmail.com) /
  *             Pablo Erartes (pabloeuy@gmail.com) /
  *             GBoksar/Perro (gustavo@boksar.info)
- * @link       http://motte.codigolibre.net Motte Website
  */
 class mteTableSql extends mteDataSql {
 
@@ -405,7 +403,7 @@ class mteTableSql extends mteDataSql {
 
 		foreach ($auxFields as $key=>$value) {
 			//add table common fields
-			if (in_array(str_replace($this->getTableName().".", '', $value), $this->_fields)) {				
+			if (in_array(str_replace($this->getTableName().".", '', $value), $this->_fields)) {
 				$sqlFields[$key] = $this->getTableName().".".str_replace($this->getTableName().".", '', $value);
 			}
 			//add table foreign fields

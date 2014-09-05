@@ -4,8 +4,7 @@
  *
  * @filesource
  * @package    motte
- * @subpackage model
- * @version    1.0
+ * @version    2.44
  * @license    http://opensource.org/licenses/gpl-license.php GPL - GNU Public license
  * @author     Pedro Gauna (pgauna@gmail.com) /
  *             Carlos Gagliardi (carlosgag@gmail.com) /

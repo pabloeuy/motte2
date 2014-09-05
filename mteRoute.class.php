@@ -4,7 +4,6 @@
  *
  * @filesource
  * @package motte
- * @subpackage app
  * @license GPLv2 http://opensource.org/licenses/gpl-license.php GNU Public license
  * @version 2.5
  * @author 	Maicol Bentancor (maibenta@correo.ucu.edu.uy) /

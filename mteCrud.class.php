@@ -4,7 +4,6 @@
  *
  * @filesource
  * @package motte
- * @subpackage app
  * @license GPLv2 http://opensource.org/licenses/gpl-license.php GNU Public license
  * @version 2.44
  * @author 	Pedro Gauna (pgauna@gmail.com) /
@@ -67,14 +66,14 @@ class mteCrud {
 		$this->_fieldsPrimaryKey = array();
 		$this->_labels           = array();
 		$this->_fields           = array();
-		$this->_fieldsGrid       = array(); 
+		$this->_fieldsGrid       = array();
 		$this->_htmlGrid         = DIR_MOTTE.'/tpl/mteGrid.html';
 		$this->_htmlError        = DIR_MOTTE.'/tpl/mteError.html';
 		$this->_htmlNotification = DIR_MOTTE.'/tpl/mteNotification.html';
 		$this->_cantRows         = ROWS_GRID;
 		$this->_htmlForm         = '';
 		$this->_readonly         = false;
-		
+
 		// Actions
 		$this->_actions[mteCrud::ACTION_NEW]         = true;
 		$this->_actions[mteCrud::ACTION_EDIT]        = true;
@@ -96,7 +95,7 @@ class mteCrud {
 					$this->_labels[$fieldname] = $fieldname;
 				}
 			}
-			
+
 			// Logical delete
 			$this->_fieldLogicalDel = $this->_sourceData->getFieldLogicalDelete();
 			$this->_valLogicalDel   = $this->_sourceData->getValueLogicalDelete();
@@ -117,11 +116,11 @@ class mteCrud {
 	 * @access public
 	 */
 	public function __destruct() {
-	}	
+	}
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//                  P R O P E R T I E S
-	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -	
+	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	public function setExpLogicalDelete($f, $v = '') {
 		$this->_expLogicalDel = $f;
 	}
@@ -180,7 +179,7 @@ class mteCrud {
 
 	public function offPagination() {
 		$this->_pagination = false;
-	}	
+	}
 
 	public function setFieldsGrid($a) {
 		return $this->_fieldsGrid = $a;
@@ -213,7 +212,7 @@ class mteCrud {
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//               P R I V A T E
-	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -	
+	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	private function _getErrorHtml($txt)  {
 		$tpl = mteCtr::get()->getTemplate($this->_htmlError);
 		$tpl->setVar('ERROR', $txt);
@@ -258,7 +257,7 @@ class mteCrud {
 		if ($this->_expLogicalDel != '') {
 			if ($this->_getCrudParam('showHidden') == 0) {
 				$where .= ' AND not('.$this->_expLogicalDel.')';
-			}   
+			}
 		}
 		return $where.($this->_defualtWhere != ''?' AND '.$this->_defualtWhere:'');
 	}
@@ -301,7 +300,7 @@ class mteCrud {
 					}
 					$nroField++;
 				}
-				$record = $this->_sourceData->getRecord(implode(' AND ',$aux));			
+				$record = $this->_sourceData->getRecord(implode(' AND ',$aux));
 			}
 		}
 
@@ -357,7 +356,7 @@ class mteCrud {
 			}
 		}
 		return $result == ''?'OK':$this->_form($record, false, $result);
-	}	
+	}
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//                 V I E W   R E C O R D
@@ -367,7 +366,7 @@ class mteCrud {
 	}
 
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	//                    G R I D 
+	//                    G R I D
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	public function initialize(){
 		$this->_setCrudParam('filterValue', '' );
@@ -441,7 +440,7 @@ class mteCrud {
 		$orderField     = $this->_getCrudParam('orderField');
 		$orderDirection = $this->_getCrudParam('orderDirection');
 		if ($orderField == '') {
-			$aux = $fieldsGrid;	
+			$aux = $fieldsGrid;
 			$orderField     = array_shift($aux);
 			$orderDirection = 'asc';
 		}
