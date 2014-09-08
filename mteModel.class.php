@@ -84,17 +84,14 @@ class mteModel {
 		switch (DB_DRIVER) {
 			case 'mySql':
 				if (!($this->_cnx instanceof mteCnxMySql)) {
-					$this->_cnx = new mteCnxMySql($hostName, $userName, $password, $database, $persistent, false, $port, $charset);
+					$this->_cnx = new mteCnxMySql($hostName, $userName, $password, $database, $persistent, $autoconnect, $port, $charset);
 				}
 				break;
 			case 'mySqli':
 				if (!($this->_cnx instanceof mteCnxMySqli)) {
-					$this->_cnx = new mteCnxMySqli($hostName, $userName, $password, $database, $persistent, false, $port, $charset);
+					$this->_cnx = new mteCnxMySqli($hostName, $userName, $password, $database, $persistent, $autoconnect, $port, $charset);
 				}
 				break;
-		}
-		if ($autoconnect) {
-			$this->_cnx->connect(true);
 		}
 		$this->_cnx->setDebug($debug);
 
@@ -115,7 +112,7 @@ class mteModel {
 				} else {
 					$objMdl = 'mdl' . ucfirst(substr($model, $pos + 1));
 				}
-				$this->_obj['mdl'.strtolower($model)] = new $objMdl(mteModel::get());
+				$this->_obj['mdl'.strtolower($model)] = new $objMdl(self::get());
 			}
 			else {
 				die(__('Unknown model').' '.$model);
