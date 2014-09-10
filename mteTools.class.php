@@ -257,7 +257,7 @@ class tools {
     }
 
 	static function getNameDay($date) {
-		$days    = ymTools::getNameDays();
+		$days    = self::getNameDays();
 		$dateArr = explode ("-", $date);
 		$d       = date("w", mktime(0,0,0,$dateArr[1],$dateArr[2],$dateArr[0]));
 		return $days[$d];
