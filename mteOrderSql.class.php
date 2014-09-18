@@ -15,7 +15,7 @@
     class mteOrderSql {
 
      /**
-      * Estructura auxiliar para guardar prden
+      * Auxiliary structure to keep order
       *
       * @access public
       * @var _order

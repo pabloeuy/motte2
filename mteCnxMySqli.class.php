@@ -258,5 +258,6 @@ class mteCnxMySqli extends mteCnx {
 		}
 		return $return;
 	}
+
 }
 ?>

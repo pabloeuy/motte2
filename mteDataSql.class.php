@@ -147,7 +147,8 @@ class mteDataSql {
 	    			}
 	    			$resource->free();
 	    		}else{
-	    			die(__("Failed to perform query, maybe it's badly written (motte). ".$sql));
+	    			$sql = defined('DB_DEBUG') && DB_DEBUG ? $sql: '';
+	    			die(__("Failed to perform query, maybe it's badly written (motte). $sql"));
 	    		}
             }
 		}
