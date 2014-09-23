@@ -34,7 +34,14 @@ class mteHtml {
      * FORM INPUTS
      * ***************************************************************************************************************************************/
 
-
+    /**
+     * Generate a input with type, name, value and optional fields of html
+     * @param  string $type    text, email, password, checkbox, file, url, etc
+     * @param  string $name    the name that set the id and name input attribute
+     * @param  mixed  $value   the value or model that contains the value by name
+     * @param  array  $options additionals fields of html input
+     * @return string the html input generated
+     */
     static function input($type, $name, $value = null, $options = array()) {
         if ( ! isset($options['name'])){
             $options['name'] = $name;
@@ -62,6 +69,9 @@ class mteHtml {
         return '<input'.self::attributes($options).'>';
     }
 
+    /**
+     * Get Id according the options or name by default
+     */
     private static function getIdAttr($name, $options) {
         if (array_key_exists('id', $options))
         {
@@ -70,6 +80,9 @@ class mteHtml {
         return $name;
     }
 
+    /**
+     * Generate Html attributes by array
+     */
     private static function attributes($attributes) {
         $html = array();
 
@@ -83,6 +96,9 @@ class mteHtml {
         return count($html) > 0 ? ' '.implode(' ', $html) : '';
     }
 
+    /**
+     * Generate a html attribute by key-value
+     */
     protected static function htmlAttr($key, $value) {
         if ( ! is_null($value)){
             return $key.'="'.$value.'"';
@@ -91,6 +107,9 @@ class mteHtml {
         }
     }
 
+    /**
+     * Generate a label for input
+     */
     static function label($name, $text = null, $options = array()) {
 
         $options = self::attributes($options);
@@ -100,6 +119,9 @@ class mteHtml {
         return '<label for="'.$name.'"'.$options.'>'.$text.'</label>';
     }
 
+    /**
+     * Format the text of a label according the text label or name by default
+     */
     private static function formatLbl($name, $text) {
         if(!$text){
             return ucwords(
@@ -109,6 +131,9 @@ class mteHtml {
         return $text;
     }
 
+    /**
+     * Generate a text area input
+     */
     static function memo($name, $value = null, $options = array()) {
         if ( ! isset($options['name'])){
             $options['name'] = $name;
@@ -171,7 +196,7 @@ class mteHtml {
      * Returns a value depending on whether it is an array or not (if so it's a model)
      */
     private static function getValue($value,$name) {
-        if(is_null($value)){
+        if(!is_null($value)){
 
             if(is_array($value)){
                 return isset($value[$name]) ? $value[$name] : self::EMPTY_VALUE_FORM;

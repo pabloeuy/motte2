@@ -939,7 +939,7 @@ class mteTableSql extends mteDataSql {
 
 
 	/**
-	 * Retorna el primer registro segun el where y orden recibidos como parametro
+	 * Returns the first record according to the where and the order received as parameter
 	 *
 	 * @access public
 	 * @param string $order
@@ -948,27 +948,26 @@ class mteTableSql extends mteDataSql {
 	 */
 	public function getRecord($where = '', $order = '', $calcFields = true, $foreignFields = TRUE) {
 
-		// Antes de cargar
+		// Before load
 		if (method_exists($this, 'beforeGetRecord')) {
 			$this->beforeGetRecord($record);
 		}
 
-		// Cargo record
+		// Load record
 		$recordSet = $this->getRecordSet('*', $where, $order, 1, 0, false, false, $foreignFields);
 		$recordSet->first();
 		$record = $recordSet->record;
 
-		// Antes de cargar
+		// Before load
 		if (method_exists($this, 'afterGetRecord')) {
 			$this->afterGetRecord($record);
 		}
 
-		// Genero campos calculados
+		// Generate calc fields
 		if ((method_exists($this, 'onCalcFields')) && ($calcFields)) {
 			$error = $this->onCalcFields($record);
 		}
 
-		// Devuelvo
 		return $record;
 	}
 
@@ -1009,7 +1008,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Retorna true si para el where hay registros o false si no
+	 * Return true if in the where have records or false if not
 	 *
 	 * @access public
 	 * @param string $where
@@ -1020,7 +1019,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve cuantos registros cumplen la condicion
+	 * Return the number of records according the where
 	 *
 	 * @access public
 	 * @param string $where
@@ -1031,12 +1030,12 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve cantidad de paginas para el filtro parametro
+	 * Returns number of pages for the filter parameter
 	 *
 	 * @access public
 	 * @param string $where
-	 * @param int $numRows Cantidad de filas por cada pagina
-	 * @return int Cantidad de paginas
+	 * @param int $numRows Number of rows per page
+	 * @return int Page's count
 	 */
 	public function getTotalPages($numRows = 50, $where = '') {
 		if ($numRows == 0) {
@@ -1053,15 +1052,14 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve un registro en blanco (adentro pregunta si existe el metodo
-	 * onnewrecord en el hijo de table x ej, TPersona)
+	 * Return an emtpy record
 	 *
 	 * @access public
 	 * @param
 	 * @return  array o string (error)
 	 */
 	public function getEmptyRecord() {
-		// Genero campos
+		// Generate fields
 		$record = array ();
 		foreach ($this->getFields() as $fieldName) {
 			$record[$fieldName] = '';
@@ -1073,6 +1071,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
+	 * Generate an array with key and label from a record
 	 *
 	 * @param string $fieldKey
 	 * @param string $fieldDesc
@@ -1120,7 +1119,7 @@ class mteTableSql extends mteDataSql {
 	 *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	 */
 	 /**
-	 * Limpia manejador de errores de ejecucion
+	 * Clean error handler execution
 	 *
 	 * @access public
 	 * @param
@@ -1132,7 +1131,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Agrega error de ejecucion
+	 * Make execution error
 	 *
 	 * @access public
 	 * @param  string $error
@@ -1146,7 +1145,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * devuelve array errores
+	 * Return error's array
 	 *
 	 * @access public
 	 * @return array
@@ -1157,7 +1156,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve cantidad de errores
+	 * Return error's count
 	 *
 	 * @access public
 	 * @return integer
@@ -1167,7 +1166,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Parsea errores
+	 * Parsing errors
 	 *
 	 * @access public
 	 * @param  string $msgIni
@@ -1177,8 +1176,8 @@ class mteTableSql extends mteDataSql {
 	 *
 	 */
 	public function parseErrorExec($msgIni = '', $msgEnd = '', $glue = '') {
-		return $this->countErrorExec() > 0?"\n".$msgIni.$glue.implode($glue, $this->_errorExec).$glue.$msgEnd:
-				'';
+		return $this->countErrorExec() > 0 ?
+						"\n".$msgIni.$glue.implode($glue, $this->_errorExec).$glue.$msgEnd : '' ;
 	}
 
 	/**
@@ -1193,7 +1192,7 @@ class mteTableSql extends mteDataSql {
 		if ($this->countErrorExec() > 0) {
 			$literal = $this->countErrorExec().' '.__('error(s) found');
 		}
-		// Returns
+
 		return $literal;
 	}
 
