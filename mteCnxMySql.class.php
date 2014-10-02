@@ -275,5 +275,9 @@ class mteCnxMySql extends mteCnx {
 		}
 		return $return;
 	}
+
+	public function selectDB($database){
+		return mysql_select_db($database, $this->getIdDatabase());
+	}
 }
 ?>

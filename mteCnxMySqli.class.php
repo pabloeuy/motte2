@@ -78,6 +78,8 @@ class mteCnxMySqli extends mteCnx {
 			else {
 				mysqli_set_charset($this->getIdDatabase(), $this->getCharset());
 			}
+		} else {
+			die(__('Check database params'));
 		}
 		// return
 		return $result;
@@ -257,6 +259,10 @@ class mteCnxMySqli extends mteCnx {
 			}
 		}
 		return $return;
+	}
+
+	public function selectDB($database){
+		return mysqli_select_db( $this->getIdDatabase(), $database);
 	}
 
 }
