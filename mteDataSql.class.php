@@ -137,7 +137,8 @@ class mteDataSql {
 		}
 		else {
 			if (method_exists('mysqli_result', 'fetch_all')) { # Compatibility layer with PHP < 5.3
-                $rSet->addData($resource->fetch_all(MYSQLI_NUM));
+				$data = $resource->fetch_all(MYSQLI_ASSOC);
+                $rSet->addData($data);
 			    $resource->free();
             }
             else {

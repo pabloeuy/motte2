@@ -178,7 +178,7 @@ class mteHtml {
 
 
     private static function option($value, $label, $selected) {
-        $selected = $this->getSelValue($value, $selected);
+        $selected = self::getSelValue($value, $selected);
 
         $options = array(
             'value' => $value,
@@ -188,7 +188,7 @@ class mteHtml {
         return '<option'.self::attributes($options).'>'.$label.'</option>';
     }
 
-    private function getSelValue($value, $selected) {
+    private static function getSelValue($value, $selected) {
         return ((string) $value == (string) $selected) ? 'selected' : null;
     }
 
@@ -207,6 +207,17 @@ class mteHtml {
         return self::EMPTY_VALUE_FORM;
     }
 
+
+    /******************************************************************************************************************************************
+     * COMMON FUNCTIONS
+     * ***************************************************************************************************************************************/
+
+    public static function includeHtml($route){
+        if(class_exists('mteCtr')){
+            return mteCtr::get()->getTemplate($route)->getHtml();
+        }
+        die(__('mteCtr is not included'));
+    }
 }
 ?>
 
