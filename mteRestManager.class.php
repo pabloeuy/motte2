@@ -142,7 +142,7 @@ class mteRestManager {
 
 	private function _response($code, $data) {
 		header(sprintf('HTTP/%s %s', MTE_HTTP_VERSION, $code));
-		header('Content-Type', MTE_RESPONSE_CONTENT_TYPE);
+		header('Content-Type: ' . MTE_RESPONSE_CONTENT_TYPE);
 		if ($data != '') {
 			echo(json_encode($data));
 		}
@@ -158,7 +158,7 @@ class mteRestManager {
 
 	public function responseFile($content_type, $data) {
 		header(sprintf('HTTP/%s %s', MTE_HTTP_VERSION, MTE_HTTP_RESPONSE_SUCCESS));
-		header('Content-Type', $content_type);
+		header('Content-Type: ' . $content_type);
 		if ($data != '') {
 			echo $data;
 		}
