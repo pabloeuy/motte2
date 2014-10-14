@@ -262,7 +262,14 @@ class mteCnxMySqli extends mteCnx {
 	}
 
 	public function selectDB($database){
-		return mysqli_select_db( $this->getIdDatabase(), $database);
+		return mysqli_select_db($this->getIdDatabase(), $database);
+	}
+
+	/**
+	 * Escapes special characters in a string for use in an SQL statement
+	 */
+	public function escapeString($value){
+		return mysqli_real_escape_string($this->getIdDatabase(), $value);
 	}
 
 }
