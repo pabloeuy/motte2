@@ -95,6 +95,7 @@ class mteRestManager {
 		}
         else {
         	$this->responseError(__('Malformed json'));
+        	die();
 		}
 	}
 
@@ -145,7 +146,7 @@ class mteRestManager {
 		header(sprintf('HTTP/%s %s', MTE_HTTP_VERSION, $code));
 		header('Content-Type: ' . MTE_RESPONSE_CONTENT_TYPE);
 		if ($data != '') {
-			echo(json_encode($data));
+			echo(trim(json_encode($data)));
 		}
 	}
 
