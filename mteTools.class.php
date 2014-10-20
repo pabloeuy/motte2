@@ -59,7 +59,7 @@ class tools {
 
 	static function getAge($birth, $now = ''){
         date_default_timezone_set("UTC");
-        $dob = date("d-m-Y",strtotime($birth));
+        $dob = date("Y-m-d",strtotime($birth));
         $dobObject = new DateTime($dob);
         $nowObject = new DateTime();
     	$diff = $dobObject->diff($nowObject);

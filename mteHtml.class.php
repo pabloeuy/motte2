@@ -139,7 +139,7 @@ class mteHtml {
             $options['name'] = $name;
         }
 
-        $value = self::getValue($value,$name);
+        $value = self::getValue($value, $name);
 
         $options['id'] = self::getIdAttr($name, $options);
 
@@ -178,14 +178,11 @@ class mteHtml {
 
 
     private static function option($value, $label, $selected) {
-        $selected = self::getSelValue($value, $selected);
-
-        $options = array(
-            'value' => $value,
-            'selected' => $selected
-        );
-
-        return '<option'.self::attributes($options).'>'.$label.'</option>';
+        $options = array();
+        $options['value'] = $value;
+        $selectedTxt = self::getSelValue($value, $selected);
+        
+        return '<option'.self::attributes($options) . $selectedTxt . ' >'.$label.'</option>';
     }
 
     private static function getSelValue($value, $selected) {

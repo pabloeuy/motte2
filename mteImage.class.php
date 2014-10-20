@@ -1,6 +1,6 @@
 <?php
 /**
- * mteCrud
+ * mteImage
  *
  * @filesource
  * @package motte

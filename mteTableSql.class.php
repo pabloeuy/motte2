@@ -861,7 +861,7 @@ class mteTableSql extends mteDataSql {
      * @param  string $where filtro para buscar si ya existe para actualizar, sino se inserta
 	 * @return string returns '' if success
      */
-    public function upsertRecord($record,$where) {
+    public function upsertRecord($record, $where) {
         if($this->exists($where)){
         	return $this->updateRecord($record,$where);
         }else{
