@@ -148,12 +148,18 @@ class mteHtml {
         return '<textarea'.$options.'>'.$value.'</textarea>';
     }
 
+    /**
+     * Convert a variable name in label string
+     */
     static function camelCaseToHumanString($string) {
             $regex = '/(?<=[a-z])(?=[A-Z])/x';
             $result = preg_split($regex, $string);
             return join($result, " " );
     }
 
+    /**
+     * Generate a dropdown/combobox menu with an array of options
+     */
     static function dropdown($name, $selectOptions = array(), $selected = null, $options = array()) {
         $options['id'] = self::getIdAttr($name, $options);
 
@@ -176,15 +182,20 @@ class mteHtml {
         return "<select{$options}>{$selectOptions}</select>";
     }
 
-
+    /**
+     * Generate a option element
+     */
     private static function option($value, $label, $selected) {
         $options = array();
         $options['value'] = $value;
         $selectedTxt = self::getSelValue($value, $selected);
-        
+
         return '<option'.self::attributes($options) . $selectedTxt . ' >'.$label.'</option>';
     }
 
+    /**
+     * Get the text of selected value if the value is the selected
+     */
     private static function getSelValue($value, $selected) {
         return ((string) $value == (string) $selected) ? 'selected' : null;
     }
@@ -209,6 +220,9 @@ class mteHtml {
      * COMMON FUNCTIONS
      * ***************************************************************************************************************************************/
 
+    /**
+     * Include an html in other
+     */
     public static function includeHtml($route){
         if(class_exists('mteCtr')){
             return mteCtr::get()->getTemplate($route)->getHtml();
