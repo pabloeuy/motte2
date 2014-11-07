@@ -92,6 +92,14 @@ class tools {
 		return str_replace($dangerous_characters, '', $dangerous_filename);
 	}
 
+	/**
+	 *  Limit the amount of text (to display)
+	 */
+	public static function shorter($text, $limit)
+    {
+        return (strlen($text) > $limit) ? trim(substr($text, 0, $limit)). "..." : $text;
+    }
+
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//                         D E V E L
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
