@@ -100,6 +100,30 @@ class mteRestClient {
     }
 
     /**
+     * Send by json POST, usually to add/edit a resource
+     * @param  string $uri : the route make request POST
+     * @param  string $data  : data to send in json format
+     * @return the response obtained by calling the REST by POST
+     */
+    public function postJSON($uri, $data){
+        if($this->_auth){
+            $response = \Httpful\Request::post($this->_uriApi.$uri)
+                        ->sendsJson()
+                        ->authenticateWith($this->_user,$this->_pass)
+                        ->body($data)
+                        ->send();
+        }else{
+            $response = \Httpful\Request::post($this->_uriApi.$uri)
+                        ->sendsJson()
+                        ->body($data)
+                        ->send();
+        }
+        $this->_debug($response);
+        return $response;
+    }
+
+
+    /**
      * Send by DELETE to delete a resource (works like GET)
      * @param  string $uri : the route make request DELETE
      * @return the response obtained by calling the REST by DELETE
