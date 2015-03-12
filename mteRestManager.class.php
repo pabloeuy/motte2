@@ -159,7 +159,7 @@ class mteRestManager {
 	}
 
 	public function responseSuccess($data = ''){
-		$this->_response(MTE_HTTP_RESPONSE_SUCCESS, $data);
+		$this->_response(MTE_HTTP_RESPONSE_SUCCESS, $data == ''? 'success' : $data);
 	}
 
 	public function responseFile($content_type, $data) {
