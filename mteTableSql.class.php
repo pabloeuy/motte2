@@ -326,7 +326,6 @@ class mteTableSql extends mteDataSql {
 			$result = array ();
 			if ($param != '') {
 				$param = str_replace(array("\t", "\n", "\r"), '', $param);
-//				$param = ereg_replace("\t", "", ereg_replace(" ", "", ereg_replace("\n", "", ereg_replace("\r", "", $param))));
 				$result = explode(',', $param);
 				if (is_array($result)) {
 					foreach ($result as $key=>$element) {
@@ -408,7 +407,8 @@ class mteTableSql extends mteDataSql {
 			}
 			//add table foreign fields
 			if (in_array($value, array_keys($this->_fieldsForeign))) {
-				$sqlFields[$key] = ($this->_fieldsForeign[$value]['addPrefix']?$this->_fieldsForeign[$value]['tableF'].".":'').$this->_fieldsForeign[$value]['descF']." AS ".$value;
+				$strFK = $this->_fieldsForeign[$value]['addPrefix']?$this->_fieldsForeign[$value]['tableF'].".":'';
+				$sqlFields[$key] = $strFK . $this->_fieldsForeign[$value]['descF'] . " AS " . $value;
 			}
 			//add calc fields
 			if (in_array($value, array_keys($this->_fieldsCalc))) {
@@ -427,7 +427,8 @@ class mteTableSql extends mteDataSql {
 		$inner = array ();
 		foreach ($arrayFieldsForeign as $key=>$value) {
 			if (!array_key_exists($value['tableF'], $inner)) {
-				$inner[$value['tableF']] = " INNER JOIN ".$value['tableF']." ON ".$this->getTableName().".".$value['key']."=".$value['tableF'].".".$value['keyF'];
+				$inner[$value['tableF']] = " INNER JOIN ".$value['tableF'] . " ON " . $this->getTableName() . "." .
+											$value['key'] . "=" . $value['tableF'] . "." . $value['keyF'];
 			}
 		}
 		$query = $query.implode("\n", $inner);
@@ -471,7 +472,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve nombre de la tabla
+	 * Returns the table's name
 	 *
 	 * @access public
 	 * @return string
@@ -496,7 +497,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve nombre de la tabla
+	 * Returns the schema's name
 	 *
 	 * @access public
 	 * @return string
@@ -506,7 +507,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve el array _fields
+	 * Returns the table's fields
 	 *
 	 * @access public
 	 * @return array
@@ -516,7 +517,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve el array _fieldsKey
+	 * Returns the table's key fields
 	 *
 	 * @access public
 	 * @return array
@@ -526,7 +527,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve el array _fieldsCalc
+	 * Returns the table's calc fields
 	 *
 	 * @access public
 	 * @return array
@@ -536,7 +537,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve el array _fieldsForeign
+	 * Returns the table's foreign key fields
 	 *
 	 * @access public
 	 * @return array
@@ -551,7 +552,7 @@ class mteTableSql extends mteDataSql {
 	 *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	 */
 	 /**
-	 * devuelve where id
+	 * From a record returns the sql where with the primary key
 	 *
 	 * @param array $record
 	 * @return string
@@ -567,45 +568,53 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Agrega campo foraneo a la estructura de la tabla
-	 * (sirve para simular FK cuando el SGBD no lo soporta)
+	 * Make foreign field to the table structure
+	 * (used to simulate FK when the DBMS does not support it)
 	 *
 	 * @access public
-	 * @param string $fieldName el nombre que se le dara al campo
-	 * @param string $fieldKey es el campo foreign de this
-	 * @param string $tableForeign es la tabla externa
-	 * @param string $fieldKeyForeign es el campo externo
-	 * @param string $fieldDescForeign es la descripcion del campo
+	 * @param string $fieldName the name that will be given to the field
+	 * @param string $fieldKey the foreign field
+	 * @param string $tableForeign external table
+	 * @param string $fieldKeyForeign external field
+	 * @param string $fieldDescForeign the field description
 	 * @return void
 	 */
-	public function addFieldForeignKey($fieldName, $fieldKey, $tableForeign, $fieldKeyForeign = '', $fieldDescForeign = '', $addPrefix = true) {
+	public function addFieldForeignKey($fieldName, $fieldKey, $tableForeign, $fieldKeyForeign = '',
+		                               $fieldDescForeign = '', $addPrefix = true) {
 		// Si no existe
 		if (($fieldName != '') && (!$this->_fieldExist($fieldName))) {
-			$this->_fieldsForeign[$fieldName] = array ('key'=>$fieldKey, 'tableF'=>$tableForeign, 'keyF'=>($fieldKeyForeign == '')?$fieldKey:$fieldKeyForeign, 'descF'=>$fieldDescForeign, 'addPrefix'=>$addPrefix);
+			$fk = array (
+				'key'      => $fieldKey,
+				'tableF'   => $tableForeign,
+				'keyF'     => ($fieldKeyForeign == '')?$fieldKey:$fieldKeyForeign,
+				'descF'    => $fieldDescForeign,
+				'addPrefix'=> $addPrefix
+			);
+			$this->_fieldsForeign[$fieldName] = $fk;
 		}
 	}
 
 	/**
-	 * Agrega un campo calculado
+	 * Add a calc field
 	 *
 	 * @access public
 	 * @param string $fieldName
-	 * @param string $expresion	Campo calculado
+	 * @param string $expresion	calc field
 	 * @return void
 	 */
 	public function addFieldCalcSql($fieldName, $expresion) {
-		// Si no existe
+		// if doesn't exists
 		if (($fieldName != '') && (!$this->_fieldExist($fieldName))) {
 			$this->_fieldsCalc[$fieldName] = $expresion;
 		}
 	}
 
 	/**
-	 * Agrega un campo calculado al array de campos calculados
+	 * Add a calculated field to the array of calculated fields
 	 *
 	 * @access public
-	 * @param string $fieldName nombre que tendra el campo calculado
-	 * @param array	$toConcat array de strings a concatenar
+	 * @param string $fieldName name that will have the calculated field
+	 * @param array	$toConcat array of strings to concatenate
 	 * @return void
 	 */
 	public function addFieldCalcConcat($fieldName = '', $toConcat = '') {
@@ -613,7 +622,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Carga desde un array los datos de un record
+	 * Load data from an array the data of a record
 	 *
 	 * @access public
 	 * @return array
@@ -642,7 +651,8 @@ class mteTableSql extends mteDataSql {
 			$result = $this->getTableName().".".$field;
 		}
 		if (array_key_exists($field, $this->_fieldsForeign)) {
-			$result = ($this->_fieldsForeign[$field]['addPrefix']?$this->_fieldsForeign[$field]['tableF'].".":'').$this->_fieldsForeign[$field]['descF'];
+			$result = ($this->_fieldsForeign[$field]['addPrefix'] ? $this->_fieldsForeign[$field]['tableF'].".":'') .
+						$this->_fieldsForeign[$field]['descF'];
 		}
 
 		// return
@@ -655,7 +665,7 @@ class mteTableSql extends mteDataSql {
 	 *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	 */
 	 /**
-	 * Devuelve un mteRecordSet conteniendo los valores de la columna parametro
+	 * Return a mteRecordSet containing the parameter values ​​of column
 	 *
 	 * @access public
 	 * @param string $fieldsToShow
@@ -679,9 +689,9 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve la primer columna del primer registro segun el orden indicado en el parametro
+	 * Return the first column of the first record after the order indicated in the parameter
 	 * @access  public
-	 * @param  string $fieldName Este parametro contendra solo un campo
+	 * @param  string $fieldName This parameter will contain only one field
 	 * @param  string $where
 	 * @param  string $order
 	 * @return  Object o boolean
@@ -697,10 +707,11 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve el maximo identificador de la tabla
+	 * Returns the max table's identifier
 	 *
 	 * @access public
-	 * @param string $fieldName si viene vacio toma el primer pk de la tabla,sino retorna el maximo del campo parametro (que se asume es pk)
+	 * @param string $fieldName if it comes empty pk takes the first table's pk,
+	 *                          but returns the max of the parameter field (which is assumed to be pk)
 	 * @return Object o boolean
 	 */
 	public function lastId($fieldName = '') {
@@ -718,21 +729,20 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Inserta el nuevo registro y devuelve error o exito asume que los formatos de datos
-	 * son correctos, por ejemplo, campo integer necesita un entero como valor (ademas
-	 * llama a before insert y after insert)
+	 * Insert the new record and returns error or success, assumes that the data formats
+	 * are correct, for example, the integer field requires an integer value.
+	 * Also calls before Insert and after Insert.
 	 *
 	 * @access public
 	 * @param array $record
-	 * @return string devuelve '' en caso de exito
+	 * @return string returns '' if success
 	 */
 	public function insertRecord( & $record) {
 		$error = '';
 		if ((is_array($record)) && (is_array($this->getFields()))) {
-			// agrega campos que no estan el record y escapea
+			// add fields that are not on record and escape
 			$record = $this->_escaped($this->_fieldControl($record));
 
-			// ejecuta before insert si es que existe
 			if (method_exists($this, 'beforeInsert')) {
 				$error = $this->beforeInsert($record);
 			}
@@ -748,9 +758,9 @@ class mteTableSql extends mteDataSql {
 							$pairs[] = "'".$record[$field]."'";
 						}
 					}
-
-					$result = $this->getEngine()->executeSQL('INSERT INTO '.$this->getTableName().' ('.implode(',', $this->getFields()).
-						') VALUES ('.implode(',', $pairs).')');
+					$sqlInsert = 'INSERT INTO '.$this->getTableName().' ('.implode(',', $this->getFields()) .
+								 ') VALUES ('.implode(',', $pairs).')';
+					$result = $this->getEngine()->executeSQL($sqlInsert);
 					if ($result === false) {
 						$error = $this->getEngine()->getEventMsg();
 					}
@@ -769,21 +779,21 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Actualiza el registro y devuelve error o exito (ademas llama a beforeUpdate y afterUpdate)
+	 * Updates the record and returns error or success
+	 * Also calls before Update and after Update.
 	 *
 	 * @access public
-	 * @param  array  $record campos a actualizar
-	 * @param  string $where filtro para actualizar la tabla
-	 * @return string
+	 * @param  array  $record fields to update
+	 * @param  string $where filter to update the table
+	 * @return string returns '' if success
 	 */
 	public function updateRecord( & $record, $where = '') {
 		$error = '';
 
 		if ((is_array($record)) && (is_array($this->getFields()))) {
-			// escapea datos
+			// escape data
 			$record = $this->_escaped($record);
 
-			// ejecuta before update si es que existe
 			if (method_exists($this, 'beforeUpdate')) {
 				$error = $this->beforeUpdate($record);
 			}
@@ -824,25 +834,62 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * borra el registro y devuelve error o exito
-	 * (ademas llama a before delete y after delete)
+     * Actualiza de una tabla un array de valores al primer registro que matchea el where
+     *
+     * @access public
+     * @param  array  $values valores a actualizar
+     * @param  string $where filtro para actualizar la tabla
+	 * @return string returns '' if success
+     */
+    public function updateValues($values, $where = '') {
+        $error = '';
+        $record=$this->getRecord($where);
+        if(empty($record)){
+            return __('UPDATE - Where is not matching').' ('.$this->getTableName().')';
+        }
+        foreach ($values as $fieldName => $value) {
+            $record[$fieldName]=$value;
+        }
+        return $this->updateRecord($record,$where);
+    }
+
+    /**
+     * Inserta o actualiza dependiendo si se encuentra el registro
+     *
+     * @access public
+     * @param  array  $record array a insertar/actualizar
+     * @param  string $where filtro para buscar si ya existe para actualizar, sino se inserta
+	 * @return string returns '' if success
+     */
+    public function upsertRecord($record, $where) {
+        if($this->exists($where)){
+        	return $this->updateRecord($record,$where);
+        }else{
+        	return $this->insertRecord($record);
+        }
+    }
+
+
+	/**
+	 * Delete the record and returns error or success
+	 * Also calls before Delete and after Delete.
 	 *
 	 * @access public
 	 * @param string $where
-	 * @param array	$record	El record es por si no se le pasa where,
-	 * 			el record contiene los registros a borrar
-	 * 			por lo que se construye el where a partir de
-	 * 			los registros a borrar
-	 * @return string
+	 * @param array	$record	The record is if haven't where,
+	 * 			            the record contains the records to be deleted
+	 *                		so the where is constructed from the deleting record
+	 * @return string returns '' if success
 	 */
+
+
 	public function deleteRecord( & $record, $where = '') {
 		$error = '';
 
 		if ((is_array($record)) && (is_array($this->getFields()))) {
-			// agrega campos que no estan el record y escapea
+			// add fields that are not on record and escape
 			$record = $this->_escaped($this->_fieldControl($record));
 
-			// ejecuta before delete si es que existe
 			if (method_exists($this, 'beforeDelete')) {
 				$error = $this->beforeDelete($record);
 			}
@@ -872,9 +919,9 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 *
-	 * @param <type> $where
-	 * @return <type>
+	 * Deletes records by a sql where and returns error or success
+	 * @param string $where
+	 * @return string returns '' if success
 	 */
 	public function deleteRecords($where){
 		$error = '';
@@ -892,7 +939,7 @@ class mteTableSql extends mteDataSql {
 
 
 	/**
-	 * Retorna el primer registro segun el where y orden recibidos como parametro
+	 * Returns the first record according to the where and the order received as parameter
 	 *
 	 * @access public
 	 * @param string $order
@@ -901,27 +948,26 @@ class mteTableSql extends mteDataSql {
 	 */
 	public function getRecord($where = '', $order = '', $calcFields = true, $foreignFields = TRUE) {
 
-		// Antes de cargar
+		// Before load
 		if (method_exists($this, 'beforeGetRecord')) {
 			$this->beforeGetRecord($record);
 		}
 
-		// Cargo record
+		// Load record
 		$recordSet = $this->getRecordSet('*', $where, $order, 1, 0, false, false, $foreignFields);
 		$recordSet->first();
 		$record = $recordSet->record;
 
-		// Antes de cargar
+		// Before load
 		if (method_exists($this, 'afterGetRecord')) {
 			$this->afterGetRecord($record);
 		}
 
-		// Genero campos calculados
+		// Generate calc fields
 		if ((method_exists($this, 'onCalcFields')) && ($calcFields)) {
 			$error = $this->onCalcFields($record);
 		}
 
-		// Devuelvo
 		return $record;
 	}
 
@@ -962,7 +1008,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Retorna true si para el where hay registros o false si no
+	 * Return true if in the where have records or false if not
 	 *
 	 * @access public
 	 * @param string $where
@@ -973,7 +1019,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve cuantos registros cumplen la condicion
+	 * Return the number of records according the where
 	 *
 	 * @access public
 	 * @param string $where
@@ -984,12 +1030,12 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve cantidad de paginas para el filtro parametro
+	 * Returns number of pages for the filter parameter
 	 *
 	 * @access public
 	 * @param string $where
-	 * @param int $numRows Cantidad de filas por cada pagina
-	 * @return int Cantidad de paginas
+	 * @param int $numRows Number of rows per page
+	 * @return int Page's count
 	 */
 	public function getTotalPages($numRows = 50, $where = '') {
 		if ($numRows == 0) {
@@ -1006,15 +1052,14 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve un registro en blanco (adentro pregunta si existe el metodo
-	 * onnewrecord en el hijo de table x ej, TPersona)
+	 * Return an emtpy record
 	 *
 	 * @access public
 	 * @param
 	 * @return  array o string (error)
 	 */
 	public function getEmptyRecord() {
-		// Genero campos
+		// Generate fields
 		$record = array ();
 		foreach ($this->getFields() as $fieldName) {
 			$record[$fieldName] = '';
@@ -1026,6 +1071,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
+	 * Generate an array with key and label from a record
 	 *
 	 * @param string $fieldKey
 	 * @param string $fieldDesc
@@ -1073,7 +1119,7 @@ class mteTableSql extends mteDataSql {
 	 *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	 */
 	 /**
-	 * Limpia manejador de errores de ejecucion
+	 * Clean error handler execution
 	 *
 	 * @access public
 	 * @param
@@ -1085,7 +1131,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Agrega error de ejecucion
+	 * Make execution error
 	 *
 	 * @access public
 	 * @param  string $error
@@ -1099,7 +1145,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * devuelve array errores
+	 * Return error's array
 	 *
 	 * @access public
 	 * @return array
@@ -1110,7 +1156,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Devuelve cantidad de errores
+	 * Return error's count
 	 *
 	 * @access public
 	 * @return integer
@@ -1120,7 +1166,7 @@ class mteTableSql extends mteDataSql {
 	}
 
 	/**
-	 * Parsea errores
+	 * Parsing errors
 	 *
 	 * @access public
 	 * @param  string $msgIni
@@ -1130,8 +1176,8 @@ class mteTableSql extends mteDataSql {
 	 *
 	 */
 	public function parseErrorExec($msgIni = '', $msgEnd = '', $glue = '') {
-		return $this->countErrorExec() > 0?"\n".$msgIni.$glue.implode($glue, $this->_errorExec).$glue.$msgEnd:
-				'';
+		return $this->countErrorExec() > 0 ?
+						"\n".$msgIni.$glue.implode($glue, $this->_errorExec).$glue.$msgEnd : '' ;
 	}
 
 	/**
@@ -1146,44 +1192,9 @@ class mteTableSql extends mteDataSql {
 		if ($this->countErrorExec() > 0) {
 			$literal = $this->countErrorExec().' '.__('error(s) found');
 		}
-		// Returns
+
 		return $literal;
 	}
 
-	/**
-     * Actualiza de una tabla un array de valores al primer registro que matchea el where
-     *
-     * @access public
-     * @param  array  $values valores a actualizar
-     * @param  string $where filtro para actualizar la tabla
-     * @return string
-     */
-    public function updateValues($values, $where = '') {
-        $error = '';
-        $record=$this->getRecord($where);
-        if(empty($record)){
-            return __('UPDATE - Where is not matching').' ('.$this->getTableName().')';
-        }
-        foreach ($values as $fieldName => $value) {
-            $record[$fieldName]=$value;
-        }
-        return $this->updateRecord($record,$where);
-    }
-
-    /**
-     * Inserta o actualiza dependiendo si se encuentra el registro
-     *
-     * @access public
-     * @param  array  $record array a insertar/actualizar
-     * @param  string $where filtro para buscar si ya existe para actualizar, sino se inserta
-     * @return string
-     */
-    public function upsertRecord($record,$where) {
-        if($this->exists($where)){
-        	return $this->updateRecord($record,$where);
-        }else{
-        	return $this->insertRecord($record);
-        }
-    }
 }
 ?>

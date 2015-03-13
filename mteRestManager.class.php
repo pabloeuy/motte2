@@ -16,6 +16,7 @@
 define('MTE_HTTP_VERSION', 'HTTP/1.2');
 define('MTE_HTTP_RESPONSE_ERROR',   '406 Not Acceptable');
 define('MTE_HTTP_RESPONSE_SUCCESS', '200 OK');
+define('MTE_HTTP_RESPONSE_NOT_FOUND',   '404 Not Found');
 define('MTE_RESPONSE_CONTENT_TYPE', 'application/json');
 define('MTE_REQUEST_CONTENT_TYPE', 'application/json');
 
@@ -94,6 +95,7 @@ class mteRestManager {
 		}
         else {
         	$this->responseError(__('Malformed json'));
+        	die();
 		}
 	}
 
@@ -119,19 +121,19 @@ class mteRestManager {
 						$this->_execute($routeUri->getController(), $routeUri->getMethod());
 					}
 					else {
-						$this->responseError(__('Params not match'));
+						$this->responseNotFound(__('Params not match'));
 					}
 				}
 				else {
-					$this->responseError(__('No routes for selected method'));
+					$this->responseNotFound(__('No routes for selected method'));
 				}
 			}
 			else {
-				$this->responseError(__('No routes for selected controller'));
+				$this->responseNotFound(__('No routes for selected controller'));
 			}
 		}
 		else {
-			$this->responseError(__('No routes for selected request method'));
+			$this->responseNotFound(__('No routes for selected request method'));
 		}
 	}
 
@@ -142,10 +144,14 @@ class mteRestManager {
 
 	private function _response($code, $data) {
 		header(sprintf('HTTP/%s %s', MTE_HTTP_VERSION, $code));
-		header('Content-Type', MTE_RESPONSE_CONTENT_TYPE);
+		header('Content-Type: ' . MTE_RESPONSE_CONTENT_TYPE);
 		if ($data != '') {
-			echo(json_encode($data));
+			echo(trim(json_encode($data)));
 		}
+	}
+
+	public function responseNotFound($msg = ''){
+		$this->_response(MTE_HTTP_RESPONSE_NOT_FOUND, array('error' => $msg));
 	}
 
 	public function responseError($msg = ''){
@@ -153,12 +159,12 @@ class mteRestManager {
 	}
 
 	public function responseSuccess($data = ''){
-		$this->_response(MTE_HTTP_RESPONSE_SUCCESS, $data);
+		$this->_response(MTE_HTTP_RESPONSE_SUCCESS, $data == ''? 'success' : $data);
 	}
 
 	public function responseFile($content_type, $data) {
 		header(sprintf('HTTP/%s %s', MTE_HTTP_VERSION, MTE_HTTP_RESPONSE_SUCCESS));
-		header('Content-Type', $content_type);
+		header('Content-Type: ' . $content_type);
 		if ($data != '') {
 			echo $data;
 		}

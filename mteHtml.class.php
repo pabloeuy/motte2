@@ -10,6 +10,12 @@
  */
 class mteHtml {
 
+
+    /**
+     * Empty value for forms
+     */
+    const EMPTY_VALUE_FORM = '';
+
 	/**
 	 * Constructor
 	 */
@@ -28,14 +34,22 @@ class mteHtml {
      * FORM INPUTS
      * ***************************************************************************************************************************************/
 
-
-    static function input($type, $name, $value = null, $options = array())
-    {
+    /**
+     * Generate a input with type, name, value and optional fields of html
+     * @param  string $type    text, email, password, checkbox, file, url, etc
+     * @param  string $name    the name that set the id and name input attribute
+     * @param  mixed  $value   the value or model that contains the value by name
+     * @param  array  $options additionals fields of html input
+     * @return string the html input generated
+     */
+    static function input($type, $name, $value = null, $options = array()) {
         if ( ! isset($options['name'])){
             $options['name'] = $name;
         }
         $options['type'] = $type;
         $options['id'] = self::getIdAttr($name, $options);
+
+        $value = self::getValue($value,$name);
 
         if($value){
             switch ($type) {
@@ -55,8 +69,10 @@ class mteHtml {
         return '<input'.self::attributes($options).'>';
     }
 
-    private static function getIdAttr($name, $options)
-    {
+    /**
+     * Get Id according the options or name by default
+     */
+    private static function getIdAttr($name, $options) {
         if (array_key_exists('id', $options))
         {
             return $options['id'];
@@ -64,8 +80,10 @@ class mteHtml {
         return $name;
     }
 
-    private static function attributes($attributes)
-    {
+    /**
+     * Generate Html attributes by array
+     */
+    private static function attributes($attributes) {
         $html = array();
 
         foreach ($attributes as $key => $value)
@@ -78,8 +96,10 @@ class mteHtml {
         return count($html) > 0 ? ' '.implode(' ', $html) : '';
     }
 
-    protected static function htmlAttr($key, $value)
-    {
+    /**
+     * Generate a html attribute by key-value
+     */
+    protected static function htmlAttr($key, $value) {
         if ( ! is_null($value)){
             return $key.'="'.$value.'"';
         }else{
@@ -87,8 +107,10 @@ class mteHtml {
         }
     }
 
-    static function label($name, $text = null, $options = array())
-    {
+    /**
+     * Generate a label for input
+     */
+    static function label($name, $text = null, $options = array()) {
 
         $options = self::attributes($options);
 
@@ -97,8 +119,10 @@ class mteHtml {
         return '<label for="'.$name.'"'.$options.'>'.$text.'</label>';
     }
 
-    private static function formatLbl($name, $text)
-    {
+    /**
+     * Format the text of a label according the text label or name by default
+     */
+    private static function formatLbl($name, $text) {
         if(!$text){
             return ucwords(
                     self::camelCaseToHumanString(
@@ -107,11 +131,15 @@ class mteHtml {
         return $text;
     }
 
-    static function memo($name, $value = null, $options = array())
-    {
+    /**
+     * Generate a text area input
+     */
+    static function memo($name, $value = null, $options = array()) {
         if ( ! isset($options['name'])){
             $options['name'] = $name;
         }
+
+        $value = self::getValue($value, $name);
 
         $options['id'] = self::getIdAttr($name, $options);
 
@@ -120,14 +148,19 @@ class mteHtml {
         return '<textarea'.$options.'>'.$value.'</textarea>';
     }
 
+    /**
+     * Convert a variable name in label string
+     */
     static function camelCaseToHumanString($string) {
             $regex = '/(?<=[a-z])(?=[A-Z])/x';
             $result = preg_split($regex, $string);
             return join($result, " " );
     }
 
-    static function dropdown($name, $selectOptions = array(), $selected = null, $options = array())
-    {
+    /**
+     * Generate a dropdown/combobox menu with an array of options
+     */
+    static function dropdown($name, $selectOptions = array(), $selected = null, $options = array()) {
         $options['id'] = self::getIdAttr($name, $options);
 
         if ( ! isset($options['name'])){
@@ -138,6 +171,7 @@ class mteHtml {
 
         foreach ($selectOptions as $value => $label)
         {
+            $selected = self::getValue($selected,$name);
             $html[] = self::option($value, $label, $selected);
         }
 
@@ -148,24 +182,53 @@ class mteHtml {
         return "<select{$options}>{$selectOptions}</select>";
     }
 
+    /**
+     * Generate a option element
+     */
+    private static function option($value, $label, $selected) {
+        $options = array();
+        $options['value'] = $value;
+        $selectedTxt = self::getSelValue($value, $selected);
 
-    private static function option($value, $label, $selected)
-    {
-        $selected = $this->getSelValue($value, $selected);
-
-        $options = array(
-            'value' => $value,
-            'selected' => $selected
-        );
-
-        return '<option'.self::attributes($options).'>'.$label.'</option>';
+        return '<option'.self::attributes($options) . $selectedTxt . ' >'.$label.'</option>';
     }
 
-    protected function getSelValue($value, $selected)
-    {
+    /**
+     * Get the text of selected value if the value is the selected
+     */
+    private static function getSelValue($value, $selected) {
         return ((string) $value == (string) $selected) ? 'selected' : null;
     }
 
+    /**
+     * Returns a value depending on whether it is an array or not (if so it's a model)
+     */
+    private static function getValue($value,$name) {
+        if(!is_null($value)){
+
+            if(is_array($value)){
+                return isset($value[$name]) ? $value[$name] : self::EMPTY_VALUE_FORM;
+            }
+
+            return $value;
+        }
+        return self::EMPTY_VALUE_FORM;
+    }
+
+
+    /******************************************************************************************************************************************
+     * COMMON FUNCTIONS
+     * ***************************************************************************************************************************************/
+
+    /**
+     * Include an html in other
+     */
+    public static function includeHtml($route){
+        if(class_exists('mteCtr')){
+            return mteCtr::get()->getTemplate($route)->getHtml();
+        }
+        die(__('mteCtr is not included'));
+    }
 }
 ?>
 

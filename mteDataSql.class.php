@@ -137,7 +137,8 @@ class mteDataSql {
 		}
 		else {
 			if (method_exists('mysqli_result', 'fetch_all')) { # Compatibility layer with PHP < 5.3
-                $rSet->addData($resource->fetch_all(MYSQLI_NUM));
+				$data = $resource->fetch_all(MYSQLI_ASSOC);
+                $rSet->addData($data);
 			    $resource->free();
             }
             else {
@@ -147,7 +148,8 @@ class mteDataSql {
 	    			}
 	    			$resource->free();
 	    		}else{
-	    			die(__("Failed to perform query, maybe it's badly written (motte). ".$sql));
+	    			$sql = defined('DB_DEBUG') && DB_DEBUG ? $sql: '';
+	    			die(__("Failed to perform query, maybe it's badly written (motte). $sql"));
 	    		}
             }
 		}

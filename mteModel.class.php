@@ -36,6 +36,7 @@ class mteModel {
 	private $_cnx;
 	private $_dataSql;
 	private $_obj;
+	private $_database;
 
 	/**
 	 * Constructor
@@ -48,6 +49,7 @@ class mteModel {
 		$this->_tables  = array();
 		$this->_dataSql = NULL;
 		$this->_cnx     = NULL;
+		$this->_database = '';
 	}
 
 	/**
@@ -66,6 +68,23 @@ class mteModel {
 		return self::$_instance;
 	}
 
+	/**
+	 * Change the database
+	 * @param string $database the name of database
+	 */
+	public function selectDB($database){
+		if ($this->_cnx === NULL){
+			$this->_database = $database;
+			return true;
+		} else {
+			if (method_exists($this->_cnx,'selectDB')){
+				return $this->_cnx->selectDB($database);
+			} else {
+				die(__('The engine does not support changing database'));
+			}
+		}
+	}
+
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//                C O N E X I O N
 	//- - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -73,7 +92,11 @@ class mteModel {
 		$hostName    = defined('DB_HOST')?DB_HOST:$hostName;
 		$userName    = defined('DB_USER')?DB_USER:$userName;
 		$password    = defined('DB_PASS')?DB_PASS:$password;
-		$database    = defined('DB_NAME')?DB_NAME:$database;
+		if ($this->_database !== ''){
+			$database = $this->_database;
+		} else if (defined('DB_NAME')){
+			$database = DB_NAME;
+		}
 		$persistent  = defined('DB_PERSISTENT')?DB_PERSISTENT:$persistent;
 		$autoconnect = defined('DB_AUTOCONNECT')?DB_AUTOCONNECT:$autoconnect;
 		$port        = defined('DB_PORT')?DB_PORT:$port;
@@ -84,17 +107,14 @@ class mteModel {
 		switch (DB_DRIVER) {
 			case 'mySql':
 				if (!($this->_cnx instanceof mteCnxMySql)) {
-					$this->_cnx = new mteCnxMySql($hostName, $userName, $password, $database, $persistent, false, $port, $charset);
+					$this->_cnx = new mteCnxMySql($hostName, $userName, $password, $database, $persistent, $autoconnect, $port, $charset);
 				}
 				break;
 			case 'mySqli':
 				if (!($this->_cnx instanceof mteCnxMySqli)) {
-					$this->_cnx = new mteCnxMySqli($hostName, $userName, $password, $database, $persistent, false, $port, $charset);
+					$this->_cnx = new mteCnxMySqli($hostName, $userName, $password, $database, $persistent, $autoconnect, $port, $charset);
 				}
 				break;
-		}
-		if ($autoconnect) {
-			$this->_cnx->connect(true);
 		}
 		$this->_cnx->setDebug($debug);
 
@@ -115,7 +135,7 @@ class mteModel {
 				} else {
 					$objMdl = 'mdl' . ucfirst(substr($model, $pos + 1));
 				}
-				$this->_obj['mdl'.strtolower($model)] = new $objMdl(mteModel::get());
+				$this->_obj['mdl'.strtolower($model)] = new $objMdl(self::get());
 			}
 			else {
 				die(__('Unknown model').' '.$model);

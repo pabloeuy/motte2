@@ -125,7 +125,7 @@ class mteCnxMySql extends mteCnx {
 		$result = false;
 		// Si hay error
 		if ($query === false){
-			$this->setEventMsg(mysql_error());
+			$this->setEventMsg(mysql_error($this->getIdDatabase()));
 			$result = false;
 		}
 		else{
@@ -274,6 +274,10 @@ class mteCnxMySql extends mteCnx {
 			}
 		}
 		return $return;
+	}
+
+	public function selectDB($database){
+		return mysql_select_db($database, $this->getIdDatabase());
 	}
 }
 ?>
