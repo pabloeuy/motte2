@@ -245,8 +245,8 @@ class tools {
 
 	static function getNameDays() {
 		return array(	__('Domingo'), __('Lunes'), __('Martes'),
-						__('Miercoles'), __('Jueves'), __('Viernes'),
-						__('Sabado'));
+						__('Miércoles'), __('Jueves'), __('Viernes'),
+						__('Sábado'));
 	}
 
 	static function getNameYM($ym) {
