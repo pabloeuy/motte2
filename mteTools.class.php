@@ -194,9 +194,14 @@ class tools {
 	}
 
 	static function mysqlTodmy($date){
-		$aux = explode('-', $date);
-		if (is_array($aux) && count($aux) == 3) {
-			return $aux[2].'/'.$aux[1].'/'.$aux[0];
+		if (isset($date) && $date != '') {
+			if (is_object($date)) {
+				$date = $date->format('Y-m-d');
+			}
+			$aux = explode('-', $date);	
+			if (is_array($aux) && count($aux) == 3) {
+				return $aux[2].'/'.$aux[1].'/'.$aux[0];
+			}
 		}
 		return '00/00/0000';
 	}
