@@ -60,6 +60,9 @@ class tools {
 	static function getAge($birth, $now = ''){
         date_default_timezone_set("UTC");
         $dob = date("Y-m-d",strtotime($birth));
+
+
+
         $dobObject = new DateTime($dob);
         $nowObject = new DateTime();
     	$diff = $dobObject->diff($nowObject);
@@ -198,7 +201,7 @@ class tools {
 			if (is_object($date)) {
 				$date = $date->format('Y-m-d');
 			}
-			$aux = explode('-', $date);	
+			$aux = explode('-', $date);
 			if (is_array($aux) && count($aux) == 3) {
 				return $aux[2].'/'.$aux[1].'/'.$aux[0];
 			}

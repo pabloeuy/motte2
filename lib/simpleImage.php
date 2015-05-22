@@ -71,15 +71,13 @@ class SimpleImage {
    }
 
    function getWidth() {
-
       return imagesx($this->image);
    }
 
    function getHeight() {
-
       return imagesy($this->image);
    }
-   
+
    function resizeToHeight($height) {
 
       $ratio = $height / $this->getHeight();

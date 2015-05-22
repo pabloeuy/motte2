@@ -18,23 +18,40 @@ class mteImage {
 
 	public static function imageResizeToMax($scr, $target, $w, $h) {
 		$image = new SimpleImage();
-    	$image->load($scr);
-    	$image->resizeToMax($w, $h);
-    	$image->save($target, IMAGETYPE_JPEG, IMAGE_COMPRESSION, 0666);
+		$image->load($scr);
+		$image->resizeToMax($w, $h);
+		$image->save($target, IMAGETYPE_JPEG, IMAGE_COMPRESSION, 0666);
 	}
 
 	public static function resizeToHeight($scr, $target, $h) {
 		$image = new SimpleImage();
-    	$image->load($scr);
-    	$image->resizeToHeight($h);
-    	$image->save($target, IMAGETYPE_JPEG, IMAGE_COMPRESSION, 0666);
+		$image->load($scr);
+		$image->resizeToHeight($h);
+		$image->save($target, IMAGETYPE_JPEG, IMAGE_COMPRESSION, 0666);
+	}
+
+	public static function resizeToWidth($scr, $target, $w) {
+		$image = new SimpleImage();
+		$image->load($scr);
+		$image->resizeToWidth($w);
+		$image->save($target, IMAGETYPE_JPEG, IMAGE_COMPRESSION, 0666);
+	}
+
+	public static function getWidth($scr) {
+		$image = new SimpleImage();
+		return $image->getWidth();
+	}
+
+	public static function getHeight($scr) {
+		$image = new SimpleImage();
+		return $image->getHeight();
 	}
 
 	public static function resize($scr, $target, $w, $h) {
 		$image = new SimpleImage();
-    	$image->load($scr);
-    	$image->resize($w, $h);
-    	$image->save($target, IMAGETYPE_JPEG, IMAGE_COMPRESSION, 0666);
+		$image->load($scr);
+		$image->resize($w, $h);
+		$image->save($target, IMAGETYPE_JPEG, IMAGE_COMPRESSION, 0666);
 	}
 
 	public static function cropImage($file, $width, $height) {
