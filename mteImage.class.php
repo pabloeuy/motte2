@@ -39,11 +39,13 @@ class mteImage {
 
 	public static function getWidth($scr) {
 		$image = new SimpleImage();
+		$image->load($scr);
 		return $image->getWidth();
 	}
 
 	public static function getHeight($scr) {
 		$image = new SimpleImage();
+		$image->load($scr);
 		return $image->getHeight();
 	}
 
